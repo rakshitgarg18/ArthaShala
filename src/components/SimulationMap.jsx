@@ -40,7 +40,7 @@ const MapMarkers = ({ activeLocation, setActiveLocation, language, activeTourSte
         return (
           <button
             key={id}
-            className={`absolute flex flex-col items-center transform -translate-x-1/2 -translate-y-[90%] transition-all cursor-pointer ${isActive ? 'scale-125 z-[60]' : 'hover:scale-110 hover:z-[60]'} ${isTarget ? 'z-[600]' : 'z-10'}`}
+            className={`absolute flex flex-col items-center transform -translate-x-1/2 -translate-y-[90%] transition-all cursor-pointer ${isActive ? 'scale-125 z-[60]' : 'hover:scale-110 hover:z-[60]'} ${isTarget ? 'z-[2000]' : 'z-10'}`}
             style={{ left: `${loc.pos.x}%`, top: `${loc.pos.y}%` }}
             onClick={() => setActiveLocation({ id, ...loc })}
           >
@@ -100,7 +100,8 @@ export default function SimulationMap({ onOpenLedger, profile }) {
   useEffect(() => {
     // Auto-scroll to Panchayat during its tour step
     if (activeTourStep === 4 && mapScrollRef.current) {
-      mapScrollRef.current.scrollTo({ top: MAP_SIZE * 0.4, behavior: 'smooth' });
+      // Offset scrolling to center Panchayat (which is at x:50, y:70)
+      mapScrollRef.current.scrollTo({ top: MAP_SIZE * 0.5, left: MAP_SIZE * 0.25, behavior: 'smooth' });
     }
   }, [activeTourStep]);
 
@@ -266,8 +267,15 @@ export default function SimulationMap({ onOpenLedger, profile }) {
 
       {/* ── VIBRANT MAP AREA ── */}
       <div ref={mapScrollRef} className="flex-1 overflow-auto bg-[#F4EBD9] relative cursor-grab active:cursor-grabbing scroll-smooth">
-         <div style={{ position: 'relative', width: MAP_SIZE, height: MAP_SIZE }} className="shadow-inner">
-           <img src={villageMap} alt="Village Map" style={{ width: MAP_SIZE, height: MAP_SIZE }} draggable={false} className="brightness-[1.03] contrast-[1.05]" />
+         <div style={{ position: 'relative', width: MAP_SIZE, height: MAP_SIZE, backgroundColor: '#F4EBD9' }} className="shadow-inner">
+           <img 
+             src={villageMap} 
+             alt="Village Map" 
+             style={{ width: MAP_SIZE, height: MAP_SIZE }} 
+             draggable={false} 
+             className="brightness-[1.03] contrast-[1.05] block" 
+             onError={(e) => { e.target.style.display = 'none'; console.error('Map failed to load'); }}
+           />
            
            <MapMarkers 
              activeLocation={activeLocation} 

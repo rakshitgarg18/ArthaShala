@@ -8,7 +8,7 @@ export const FinancialProvider = ({ children }) => {
   const [walletBalance, setWalletBalance] = useState(10000);
   const [bankDebt, setBankDebt] = useState(0);
   const [sahukarDebt, setSahukarDebt] = useState(5000);
-  const [arthaScore, setArthaScore] = useState(650);
+  const [arthaScore, setArthaScore] = useState(50);
   const [currentMonth, setCurrentMonth] = useState(1);
   const [language, setLanguage] = useState('hi');
   const [claimedSchemes, setClaimedSchemes] = useState([]);
@@ -60,7 +60,7 @@ export const FinancialProvider = ({ children }) => {
       if (options.debtType === 'bank') setBankDebt(prev => prev + Math.abs(amount));
       else setSahukarDebt(prev => prev + Math.abs(amount));
       
-      if (amount > 0) setArthaScore(prev => Math.max(0, prev - 30));
+      if (amount > 0) setArthaScore(prev => Math.max(0, prev - 10));
     }
     
     if (type === 'loan_repay') {
@@ -68,21 +68,21 @@ export const FinancialProvider = ({ children }) => {
       if (options.debtType === 'bank') setBankDebt(prev => Math.max(0, prev - repayAmount));
       else setSahukarDebt(prev => Math.max(0, prev - repayAmount));
       
-      setArthaScore(prev => Math.min(1000, prev + 40));
+      setArthaScore(prev => Math.min(100, prev + 15));
     }
   }, []);
 
   const claimScheme = useCallback((amount, schemeId) => {
     setWalletBalance(prev => prev + amount);
     setClaimedSchemes(prev => [...prev, schemeId]);
-    setArthaScore(prev => Math.min(1000, prev + 25));
+    setArthaScore(prev => Math.min(100, prev + 10));
   }, []);
 
   const resetGame = useCallback(() => {
     setWalletBalance(farmerProfile.incomeGroup === 'poor' ? 5000 : 15000);
     setBankDebt(0);
     setSahukarDebt(5000);
-    setArthaScore(650);
+    setArthaScore(50);
     setCurrentMonth(1);
     setTotalInterestPaid(0);
     setClaimedSchemes([]);

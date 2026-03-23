@@ -8,28 +8,67 @@ const ArthaScoreDetails = ({ currentScore, walletBalance, language, onClose }) =
     setIsVisible(true);
   }, []);
 
-  const getZone = (score) => {
+  const getZone = (score, lang) => {
+    const isEn = lang === 'en';
+    const isMr = lang === 'mr';
+    const isGu = lang === 'gu';
+    const isBn = lang === 'bn';
+
     if (score >= 71) return {
       color: 'from-green-600 to-lime-500',
-      status: 'गाँव का गौरव (Village Pride)',
-      consequence: 'बैंक आप पर पूरा भरोसा करते हैं। आपको लोन आसानी से मिलेगा। (Banks trust you fully; you will get loans easily.)',
+      status: isEn ? 'Gao Ka Gaurav (Village Pride)' 
+            : isMr ? 'गावाचा गौरव'
+            : isGu ? 'ગામનું ગૌરવ'
+            : isBn ? 'গ্রামের গৌরব'
+            : 'गाँव का गौरव',
+      consequence: isEn ? 'Banks trust you fully; you will get loans easily.'
+                 : isMr ? 'बँकांचा तुमच्यावर पूर्ण विश्वास आहे. कर्ज सहज मिळेल.'
+                 : isGu ? 'બેંકો તમારા પર પૂરો વિશ્વાસ રાખે છે. લોન સરળતાથી મળશે.'
+                 : isBn ? 'ব্যাংকগুলি আপনার ওপর পূর্ণ ভরসা করে। ঋণ সহজে পাবেন।'
+                 : 'बैंक आप पर पूरा भरोसा करते हैं। आपको लोन आसानी से मिलेगा।',
       zone: 'GREEN'
     };
     if (score >= 41) return {
       color: 'from-yellow-500 to-orange-400',
-      status: 'सतर्क रहें (Be Careful)',
-      consequence: 'बैंक आपके साथ सावधानी बरत रहे हैं। समय पर भुगतान करें। (Banks are cautious with you. Pay on time.)',
+      status: isEn ? 'Satark Rahein (Be Careful)'
+            : isMr ? 'सतर्क रहा'
+            : isGu ? 'સતર્ક રહો'
+            : isBn ? 'সতর্ক থাকুন'
+            : 'सतर्क रहें',
+      consequence: isEn ? 'Banks are cautious with you. Pay on time.'
+                 : isMr ? 'बँका तुमच्या बाबतीत सावध आहेत. वेळेवर पैसे भरा.'
+                 : isGu ? 'બેંકો તમારા માટે સાવચેત છે. સમયસર ચૂકવણી કરો.'
+                 : isBn ? 'ব্যাংকগুলি আপনার প্রতি সতর্ক। সময়মতো পরিশোধ করুন।'
+                 : 'बैंक आपके साथ सावधानी बरत रहे हैं। समय पर भुगतान करें।',
       zone: 'YELLOW'
     };
     return {
       color: 'from-red-600 to-orange-500',
-      status: 'साहूकार का जाल (Debt Trap)',
-      consequence: 'बैंक आप पर भरोसा नहीं कर रहे हैं। कर्ज का बोझ बढ़ सकता है। (Banks do not trust you. Debt could grow.)',
+      status: isEn ? 'Sahukar Ka Jaal (Debt Trap)'
+            : isMr ? 'सावकाराचे जाळे'
+            : isGu ? 'શાહુકારની જાળ'
+            : isBn ? 'মহাজনের জাল'
+            : 'साहूकार का जाल',
+      consequence: isEn ? 'Banks do not trust you. Debt could grow.'
+                 : isMr ? 'बँकांचा तुमच्यावर विश्वास नाही. कर्जाचा बोजा वाढू शकतो.'
+                 : isGu ? 'બેંકો તમારા પર વિશ્વાસ નથી કરતી. દેવું વધી શકે છે.'
+                 : isBn ? 'ব্যাংকগুলি আপনার ওপর ভরসা করছে না। ঋণের বোঝা বাড়তে পারে।'
+                 : 'बैंक आप पर भरोसा नहीं कर रहे हैं। कर्ज का बोझ बढ़ सकता है।',
       zone: 'RED'
     };
   };
 
-  const zoneInfo = getZone(currentScore);
+  const zoneInfo = getZone(currentScore, language);
+
+  const T_LABELS = {
+    hi: { boost: 'स्कोर बढ़ाएं', lower: 'स्कोर घटाएं', bank: 'बैंक से लेनदेन', crop: 'फसल बीमा', health: 'आयुष्मान भारत', debt: 'साहूकार का कर्ज़', late: 'किश्त में देरी', otp: 'OTP शेयर करना', footer: 'आपका आर्थिक स्वास्थ्य, भारत की प्रगति' },
+    en: { boost: 'Boost Score', lower: 'Lower Score', bank: 'Bank Deals', crop: 'Crop Insurance', health: 'Ayushman Card', debt: 'Debt Trap', late: 'Late Pays', otp: 'Sharing OTP', footer: 'Your Financial Health, India\'s Progress' },
+    mr: { boost: 'स्कोर वाढवा', lower: 'स्कोर कमी करा', bank: 'बँक व्यवहार', crop: 'पीक विमा', health: 'आयुष्मान भारत', debt: 'सावकाराचे कर्ज', late: 'हप्ता उशीर', otp: 'OTP शेअर करणे', footer: 'तुमचे आर्थिक आरोग्य, भारताची प्रगতি' },
+    gu: { boost: 'સ્કોર વધારો', lower: 'સ્કોર ઘટાડો', bank: 'બેંક વ્યવહાર', crop: 'પાક વીમો', health: 'આયુષ્માન ભારત', debt: 'શાહુકારનું દેવું', late: 'હપ્તામાં વિલંબ', otp: 'OTP શેર કરવો', footer: 'તમારું આર્થિક સ્વાસ્થ્ય, ભારતની પ્રગતિ' },
+    bn: { boost: 'স্কোর বাড়ান', lower: 'স্কোর কমান', bank: 'ব্যাংক লেনদেন', crop: 'ফসল বিমা', health: 'আয়ুষ্মান ভারত', debt: 'মহাজনের ঋণ', late: 'কিস্তিতে দেরি', otp: 'OTP শেয়ার করা', footer: 'আপনার আর্থিক স্বাস্থ্য, ভারতের প্রগতি' }
+  };
+
+  const labels = T_LABELS[language] || T_LABELS.hi;
 
   const handleClose = () => {
     setIsVisible(false);
@@ -43,8 +82,8 @@ const ArthaScoreDetails = ({ currentScore, walletBalance, language, onClose }) =
 
       {/* Slide-up Container */}
       <div 
-        className={`relative w-full max-w-2xl mx-auto bg-white/5 backdrop-blur-2xl border-t border-white/20 rounded-t-[3rem] p-4 flex flex-col transition-transform duration-500 ease-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
-        style={{ height: '90vh' }}
+        className={`relative w-full max-w-md mx-auto bg-slate-900 shadow-2xl border-t border-white/20 rounded-t-[3rem] p-4 flex flex-col transition-transform duration-500 ease-out ${isVisible ? 'translate-y-0' : 'translate-y-full'}`}
+        style={{ height: '85vh' }}
       >
         {/* Close Button */}
         <button 
@@ -95,30 +134,27 @@ const ArthaScoreDetails = ({ currentScore, walletBalance, language, onClose }) =
             </div>
 
             {/* BREAKDOWN GRID */}
-            <div className="grid grid-cols-2 gap-4 w-full mt-8">
+            <div className="grid grid-cols-1 gap-4 w-full mt-8">
               
               {/* Good Habits Card */}
               <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-[2.5rem] p-6 text-left">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-2xl">✅</span>
                   <h3 className="text-green-400 font-black text-xl tracking-wide uppercase">
-                    {language === 'hi' ? 'स्कोर बढ़ाएं' : 'Boost Score'}
+                    {labels.boost}
                   </h3>
                 </div>
-                <ul className="space-y-4">
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">🏦</span> 
-                    {language === 'hi' ? 'बैंक से लेनदेन' : 'Bank Deals'}
-                  </li>
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">🛡️</span> 
-                    {language === 'hi' ? 'फसल बीमा' : 'Crop Insurance'}
-                  </li>
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">🩺</span> 
-                    {language === 'hi' ? 'आयुष्मान भारत' : 'Ayushman Card'}
-                  </li>
-                </ul>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">🏦</span> {labels.bank}
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">🛡️</span> {labels.crop}
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">🩺</span> {labels.health}
+                  </div>
+                </div>
               </div>
 
               {/* Bad Habits Card */}
@@ -126,23 +162,20 @@ const ArthaScoreDetails = ({ currentScore, walletBalance, language, onClose }) =
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-2xl">❌</span>
                   <h3 className="text-red-400 font-black text-xl tracking-wide uppercase">
-                    {language === 'hi' ? 'स्कोर घटाएं' : 'Lower Score'}
+                    {labels.lower}
                   </h3>
                 </div>
-                <ul className="space-y-4">
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">🧛</span> 
-                    {language === 'hi' ? 'साहूकार का कर्ज़' : 'Debt Trap'}
-                  </li>
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">📉</span> 
-                    {language === 'hi' ? 'किश्त में देरी' : 'Late Pays'}
-                  </li>
-                  <li className="flex items-center gap-3 text-white/80 text-lg font-bold">
-                    <span className="text-2xl">🛑</span> 
-                    {language === 'hi' ? 'OTP शेयर करना' : 'Sharing OTP'}
-                  </li>
-                </ul>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">🧛</span> {labels.debt}
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">📉</span> {labels.late}
+                  </div>
+                  <div className="flex items-center gap-3 text-white/80 text-sm font-bold">
+                    <span className="text-xl">🛑</span> {labels.otp}
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -150,8 +183,8 @@ const ArthaScoreDetails = ({ currentScore, walletBalance, language, onClose }) =
         </div>
 
         {/* Footer Info */}
-        <div className="p-6 text-center text-white/30 text-xs font-black tracking-widest uppercase">
-          {language === 'hi' ? 'आपका आर्थिक स्वास्थ्य, भारत की प्रगति' : 'Your Financial Health, India\'s Progress'}
+        <div className="p-6 text-center text-white/30 text-[10px] font-black tracking-widest uppercase">
+          {labels.footer}
         </div>
       </div>
     </div>

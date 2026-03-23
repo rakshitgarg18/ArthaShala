@@ -178,8 +178,8 @@ export default function ArthaChacha({
           <img 
             src={chachaAvatar} 
             alt="Artha Chacha" 
-            className="w-full h-full object-cover"
-            style={{ mixBlendMode: 'multiply' }}
+            className="w-full h-full object-cover bg-slate-100"
+            onError={(e) => { e.target.style.opacity = '0.7'; e.target.src = "https://ui-avatars.com/api/?name=AC&background=indigo&color=fff"; }}
           />
         </div>
         {/* Subtle Glow Ring */}
