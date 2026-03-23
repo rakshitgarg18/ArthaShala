@@ -337,16 +337,21 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
 
           {/* Timeline Transition Overlay */}
           {timeTransition && (
-            <div className="absolute inset-0 z-[5000] bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-8">
-               <div className="w-full max-w-xs bg-white rounded-[3rem] p-10 flex flex-col items-center shadow-2xl animate-in zoom-in-95 duration-500">
-                  <div className="w-24 h-24 bg-amber-500 rounded-full flex items-center justify-center text-4xl animate-bounce mb-6 border-8 border-amber-100 italic font-black text-white">
-                    {timeTransition === 'week2' ? '🌱' : timeTransition === 'month1' ? '🌿' : '🌾'}
-                  </div>
-                  <h2 className="text-sm font-black uppercase tracking-[0.4em] text-slate-400 mb-2">Time Passing...</h2>
-                  <h1 className="text-4xl font-black text-slate-900 italic tracking-tighter">
-                    {timeTransition === 'week2' ? 'Week 2' : timeTransition === 'month1' ? 'Month 1' : 'Harvest Time!'}
-                  </h1>
-               </div>
+            <div className="absolute inset-0 z-[5000] bg-amber-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-6 p-8">
+              <div className="text-8xl animate-bounce">
+                {timeTransition === 'week2' ? '🌱' : timeTransition === 'month1' ? '🌿' : '🌾'}
+              </div>
+              <div className="text-center">
+                <p className="text-amber-400 font-black uppercase tracking-[0.4em] text-xs mb-2">समय बीत रहा है... / Time Passing...</p>
+                <h1 className="text-5xl font-black text-white italic tracking-tighter">
+                  {timeTransition === 'week2' ? 'Week 2' : timeTransition === 'month1' ? 'Month 1' : 'Harvest!'}
+                </h1>
+              </div>
+              <div className="flex gap-3 mt-2">
+                {['week2','month1','harvest'].map((s) => (
+                  <div key={s} className={`h-2 w-12 rounded-full transition-all duration-500 ${s === timeTransition ? 'bg-amber-400 scale-x-125' : 'bg-white/20'}`} />
+                ))}
+              </div>
             </div>
           )}
       </div>
