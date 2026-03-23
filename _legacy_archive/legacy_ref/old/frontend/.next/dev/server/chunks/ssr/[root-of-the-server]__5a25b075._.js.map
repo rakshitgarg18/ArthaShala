@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 14, "column": 0}, "map": {"version":3,"sources":["file:///home/baltej/Desktop/nexora/frontend/app/teaching/page.tsx"],"sourcesContent":["import React from 'react'\n\nfunction Teaching() {\n  return (\n    <div>\n      \n    </div>\n  )\n}\n\nexport default Teaching\n"],"names":[],"mappings":";;;;;;AAEA,SAAS;IACP,qBACE,8OAAC;;;;;AAIL;uCAEe"}}]
+}

@@ -1,0 +1,662 @@
+[
+  {
+    "id": "pm_kisan",
+    "name": "PM-Kisan Samman Nidhi",
+    "nameHi": "पीएम-किसान सम्मान निधि",
+    "description": "Direct income support of ₹6,000 per year for farmers.",
+    "descriptionHi": "किसानों के लिए ₹6,000 प्रति वर्ष की प्रत्यक्ष आय सहायता।",
+    "benefitAmount": 6000,
+    "triggerConditions": {
+      "maxWallet": 2000,
+      "activeMonths": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "land": "< 2 Hectares"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Passbook",
+        "hi": "बैंक पासबुक",
+        "icon": "📖"
+      },
+      {
+        "en": "Land Records",
+        "hi": "खसरा/खतौनी",
+        "icon": "📜"
+      }
+    ],
+    "destination": {
+      "en": "Visit nearest CSC or Panchayat Bhavan.",
+      "hi": "नजदीकी जन सेवा केंद्र (CSC) या पंचायत भवन जाएं।"
+    }
+  },
+  {
+    "id": "ayushman_bharat",
+    "name": "Ayushman Bharat",
+    "nameHi": "आयुष्मान भारत",
+    "description": "Free healthcare coverage up to ₹5 Lakh.",
+    "descriptionHi": "₹5 लाख तक का मुफ्त स्वास्थ्य बीमा कवरेज।",
+    "benefitAmount": 15000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": "health_emergency",
+      "requiredProfile": {
+        "income": "BPL/Antyodaya"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Ration Card",
+        "hi": "राशन कार्ड",
+        "icon": "🛒"
+      },
+      {
+        "en": "Ayushman e-Card",
+        "hi": "आयुष्मान ई-कार्ड",
+        "icon": "💳"
+      }
+    ],
+    "destination": {
+      "en": "Visit any empanelled hospital or CSC.",
+      "hi": "किसी भी सूचीबद्ध अस्पताल या CSC पर जाएं।"
+    }
+  },
+  {
+    "id": "mgnrega",
+    "name": "MGNREGA Work",
+    "nameHi": "मनरेगा रोजगार",
+    "description": "Guarantee of 100 days of wage employment.",
+    "descriptionHi": "१०० दिनों के सवेतन रोजगार की गारंटी।",
+    "benefitAmount": 250,
+    "triggerConditions": {
+      "maxWallet": 5000,
+      "activeMonths": [
+        4,
+        5
+      ],
+      "requiredEvent": null
+    },
+    "actionChecklist": [
+      {
+        "en": "Job Card",
+        "hi": "जॉब कार्ड",
+        "icon": "👷"
+      },
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Account Details",
+        "hi": "बैंक खाते का विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Contact your Gram Panchayat.",
+      "hi": "अपनी ग्राम पंचायत से संपर्क करें।"
+    }
+  },
+  {
+    "id": "beispgccpts",
+    "name": "\"Back Ended Investment Subsidy to Paddy Growers\" component of the \"Crop Production Technology\" scheme",
+    "nameHi": "धान उत्पादकों के लिए निवेश सब्सिडी (फसल उत्पादन)",
+    "description": "The \"Back Ended Investment Subsidy to Paddy Growers\" component of the \"Crop Production Technology\" s...",
+    "descriptionHi": "फसल उत्पादन तकनीक योजना के तहत धान उत्पादकों को निवेश सब्सिडी का लाभ।",
+    "benefitAmount": 4000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "land": "< 2 Hectares"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "ifpisbtcdb",
+    "name": "\"Integrated Farming for Productivity Improvement Scheme\" by the Coconut Development Board",
+    "nameHi": "नारियल विकास बोर्ड द्वारा एकीकृत कृषि योजना",
+    "description": "The scheme “Integrated Farming for Productivity Improvement Scheme\" by the Coconut Development Board...",
+    "descriptionHi": "नारियल विकास बोर्ड द्वारा एकीकृत कृषि और उत्पादकता सुधार योजना।",
+    "benefitAmount": 35000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "land": "< 2 Hectares"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "pccengaes",
+    "name": "\"Protected Cultivation\" Component of \"Establishment of New Gardens (Area Expansion)\" Scheme",
+    "nameHi": "नए बागान स्थापना (क्षेत्र विस्तार) योजना - संरक्षित खेती",
+    "description": "\"Protected Cultivation\" component of the \"Establishment of New Gardens (Area Expansion)\" scheme unde...",
+    "descriptionHi": "राष्ट्रीय बागवानी मिशन के तहत नए बागानों की स्थापना और संरक्षित खेती।",
+    "benefitAmount": 467,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "land": "< 2 Hectares"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "baepsicodouldwact",
+    "name": "Burial and Ex-gratia Payment Scheme in Case of Death of Unregistered Laborer During Work at Construction Site",
+    "nameHi": "निर्माण मजदूर की मृत्यु पर अंत्येष्टि और अनुग्रह राशि",
+    "description": "Launched in 2014, the \" Burial and Ex-gratia Payment Scheme in Case of Death of Unregistered Laborer...",
+    "descriptionHi": "निर्माण स्थल पर असंगठित मजदूर की मृत्यु होने पर अनुग्रह राशि योजना।",
+    "benefitAmount": 3000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "income": "BPL/Antyodaya"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "msasy",
+    "name": "Mukhyamantri Shramik Aujaar Sahayata Yojana",
+    "nameHi": "मुख्यमंत्री श्रमिक औजार सहायता योजना",
+    "description": "The Labor Department of Chhattisgarh launched the \"Mukhyamantri Shramik Aujaar Sahayata Yojana\" on O...",
+    "descriptionHi": "छत्तीसगढ़ श्रम विभाग द्वारा श्रमिकों को उपकरण और औजार खरीदने के लिए सहायता।",
+    "benefitAmount": 5000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "income": "BPL/Antyodaya"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "nsjbsy",
+    "name": "Nirman Shramik Jeevan va Bhavishya Suraksha Yojana",
+    "nameHi": "निर्माण श्रमिक जीवन व भविष्य सुरक्षा योजना",
+    "description": "Launched in 2016, the scheme \"Nirman Shramik Jeevan va Bhavishya Suraksha Yojana\" (Construction Work...",
+    "descriptionHi": "निर्माण श्रमिकों के लिए जीवन और भविष्य को सुरक्षित करने वाली बीमा योजना।",
+    "benefitAmount": 12,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "income": "BPL/Antyodaya"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "ismpsscis",
+    "name": "Incentive Scheme for MSMEs in Powerloom Sector: State Capital Investment Subsidy",
+    "nameHi": "पावरलूम सेक्टर में MSMEs के लिए पूंजी निवेश सब्सिडी",
+    "description": "The scheme “State Capital Investment Subsidy” is a sub scheme under the “Incentive Scheme for MSMEs ...",
+    "descriptionHi": "पावरलूम सेक्टर में MSMEs के लिए राज्य पूंजी निवेश सब्सिडी योजना।",
+    "benefitAmount": 5000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "profession": "Shopkeeper"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "aipbo-faascdmf",
+    "name": "\"Annual Insurance Premium for Boat Owners\" under \"Financial Assistance for Availing Subsidy Components for the Development of Marine Fisheries\"",
+    "nameHi": "नाव मालिकों के लिए वार्षिक बीमा प्रीमियम सब्सिडी",
+    "description": "The scheme \"Annual Insurance Premium for Boat Owners\" is a Sub-Component under the Umbrella Scheme \"...",
+    "descriptionHi": "समुद्री मत्स्य विकास योजना के तहत नाव मालिकों के लिए वार्षिक बीमा प्रीमियम।",
+    "benefitAmount": 20000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "profession": "Shopkeeper"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "aewc-mesifai-vi",
+    "name": "\"Assistance for Energy and Water Conservation\" under \"Motivation of Entrepreneurs to Start Industries and Fiscal Assistance to Industries - Various Incentives\"",
+    "nameHi": "ऊर्जा और जल संरक्षण के लिए सहायता (MSME)",
+    "description": "\"Assistance for Energy and Water Conservation\" under \"Motivation of Entrepreneurs to Start Industrie...",
+    "descriptionHi": "उद्योग स्थापित करने वाले उद्यमियों के लिए ऊर्जा और जल संरक्षण सहायता।",
+    "benefitAmount": 25000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": {
+        "profession": "Shopkeeper"
+      }
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "astpss",
+    "name": "AICTE SHORT TERM TRAINING PROGRAMME-SFURTI SCHEME",
+    "nameHi": "AICTE लघु अवधि प्रशिक्षण कार्यक्रम (SFURTI योजना)",
+    "description": "Short Term Training Programme-SFURTI Program, launched by the All India Council for Technical Educat...",
+    "descriptionHi": "AICTE द्वारा संचालित लघु अवधि तकनीकी प्रशिक्षण कार्यक्रम (STTP-SFURTI)।",
+    "benefitAmount": 400000,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": null
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "nsjbsy",
+    "name": "Nirman Shramik Jeevan va Bhavishya Suraksha Yojana",
+    "nameHi": "निर्माण श्रमिक जीवन व भविष्य सुरक्षा योजना",
+    "description": "Launched in 2016, the scheme \"Nirman Shramik Jeevan va Bhavishya Suraksha Yojana\" (Construction Work...",
+    "descriptionHi": "निर्माण श्रमिकों के लिए जीवन और भविष्य को सुरक्षित करने वाली बीमा योजना।",
+    "benefitAmount": 12,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": null
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  },
+  {
+    "id": "pmsfbcs",
+    "name": "Pre-Matric Scholarship for Backward Class Students",
+    "nameHi": "पिछड़ा वर्ग के छात्रों के लिए प्री-मैट्रिक छात्रवृत्ति",
+    "description": "The scheme \"Pre-Matric Scholarship for Backward Class Students\" by the Backward Classes and Minoriti...",
+    "descriptionHi": "अल्पसंख्यक और पिछड़ा वर्ग के छात्रों के लिए शिक्षा विभाग की प्री-मैट्रिक छात्रवृत्ति।",
+    "benefitAmount": 20,
+    "triggerConditions": {
+      "maxWallet": 999999,
+      "activeMonths": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "requiredEvent": null,
+      "requiredProfile": null
+    },
+    "actionChecklist": [
+      {
+        "en": "Aadhaar Card",
+        "hi": "आधार कार्ड",
+        "icon": "🆔"
+      },
+      {
+        "en": "Bank Details",
+        "hi": "बैंक विवरण",
+        "icon": "🏦"
+      }
+    ],
+    "destination": {
+      "en": "Visit Official Portal or CSC",
+      "hi": "आधिकारिक पोर्टल या सीएससी पर जाएं"
+    }
+  }
+]
+ 
+ 

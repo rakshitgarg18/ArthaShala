@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    environment:
+      - NODE_ENV=development
+
+  # simulation-backend:
+  #   build: ./quantum_model
+  #   ports:
+  #     - "4000:4000"
+  #   networks:
+  #     - app-network
+  #   depends_on:
+  #     - backend
+
+  trans_api:
+    build: ./trans_api
+    ports:
+      - "8244:8244"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+ 

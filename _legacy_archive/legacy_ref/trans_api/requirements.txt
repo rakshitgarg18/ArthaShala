@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+transformers
+sentencepiece
+torch
+gTTS
+torchaudio
+librosa
+soundfile
+ 

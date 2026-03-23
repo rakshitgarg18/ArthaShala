@@ -1,0 +1,40 @@
+[
+  {
+    "id": "pump_break",
+    "triggerMonth": 2,
+    "title": "पंप खराब (Pump Broken)",
+    "description": "आपका पानी का पंप अचानक खराब हो गया है। मरम्मत के लिए ₹5,000 चाहिए।",
+    "cost": 5000,
+    "educationalBypass": "emergency_savings",
+    "concept": "Emergency Savings"
+  },
+  {
+    "id": "medical",
+    "triggerMonth": 4,
+    "title": "डेंगू बुखार (Dengue Fever)",
+    "description": "घर में डेंगू हो गया है। अस्पताल का बिल ₹10,000 है। आप काम नहीं कर सकते।",
+    "cost": 10000,
+    "educationalBypass": "ayushman_bharat",
+    "concept": "Health Insurance"
+  },
+  {
+    "id": "pest_attack",
+    "triggerMonth": 7,
+    "title": "फसल में कीड़ा (Pest Attack)",
+    "description": "फसल में गंभीर कीट हमला हुआ है। कीटनाशकों के लिए ₹8,000 की ज़रूरत है।",
+    "cost": 8000,
+    "educationalBypass": "pm_fasal_bima",
+    "concept": "Crop Insurance"
+  },
+  {
+    "id": "wedding",
+    "triggerMonth": 9,
+    "title": "बहन की शादी (Sister's Wedding)",
+    "description": "परिवार और समाज का दबाव है कि शादी पर ₹25,000 खर्च किए जाएं।",
+    "cost": 25000,
+    "educationalBypass": "shg_loan",
+    "concept": "Low-interest Borrowing"
+  }
+]
+ 
+ 

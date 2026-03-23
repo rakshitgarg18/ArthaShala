@@ -1,0 +1,53 @@
+project:
+  name: arthshala-ai-backend
+  type: fastapi
+  language: python
+
+context:
+  description: >
+    Integrate an existing quantum financial village simulator
+    into a FastAPI backend. The logic already exists in script.py
+    in the same directory.
+
+files:
+  entrypoint: main.py
+  source_logic: script.py
+
+goals:
+  - Convert simulator logic into REST APIs
+  - Keep game state in memory (single user)
+  - No authentication needed
+  - JSON-only responses
+
+requirements:
+  api_framework: fastapi
+  server: uvicorn
+  python_version: ">=3.10"
+
+endpoints:
+  - GET /health
+  - GET /village/locations
+  - GET /village/{location_id}/actions
+  - POST /game/transaction
+  - GET /game/state
+  - POST /simulation/quantum
+  - GET /simulation/risk-landscape
+
+rules:
+  - Do NOT rewrite simulation logic unless needed
+  - Import classes directly from script.py
+  - Keep code modular and readable
+  - Add Pydantic models for request/response
+  - Add CORS support for frontend
+
+output:
+  - Fully working FastAPI app
+  - main.py
+  - schemas.py (Pydantic models)
+  - services.py (simulation calls)
+  - clear comments
+
+notes:
+  - This is a backend-only system
+  - UI will be handled separately
+  - Prioritize clarity over optimization 

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArthaShala | Rural Financial Simulation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Language Selection Screen -->
+        <section id="lang-screen" class="screen active">
+            <div class="logo">Artha<span>Shala</span></div>
+            <h1>Select Your Language</h1>
+            <div class="lang-grid">
+                <div class="lang-btn" data-lang="hi">
+                    <span class="script">ह</span>
+                    <span class="label">Hindi</span>
+                </div>
+                <div class="lang-btn" data-lang="mr">
+                    <span class="script">म</span>
+                    <span class="label">Marathi</span>
+                </div>
+                <div class="lang-btn" data-lang="te">
+                    <span class="script">తె</span>
+                    <span class="label">Telugu</span>
+                </div>
+                <div class="lang-btn" data-lang="ta">
+                    <span class="script">த</span>
+                    <span class="label">Tamil</span>
+                </div>
+                <div class="lang-btn" data-lang="kn">
+                    <span class="script">ಕ</span>
+                    <span class="label">Kannada</span>
+                </div>
+                <div class="lang-btn" data-lang="be">
+                    <span class="script">বাংলা</span>
+                    <span class="label">Bengali</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation Screen -->
+        <section id="simulation-screen" class="screen">
+            <div class="village-interactive">
+                <!-- Interactive hotspots over the isometric map -->
+                <div class="hotspot" style="top: 40%; left: 30%;" data-type="farm"></div>
+                <div class="hotspot" style="top: 25%; left: 60%;" data-type="market"></div>
+                <div class="hotspot" style="top: 60%; left: 50%;" data-type="well"></div>
+            </div>
+
+            <div class="sim-overlay">
+                <div class="top-bar">
+                    <div class="stat-pill balance">💰 ₹ 4,500</div>
+                    <div class="stat-pill rewards">⭐ 240 Pts</div>
+                    <div class="stat-pill mission-btn" onclick="showMission()">ℹ️ Mission</div>
+                    <div class="stat-pill status offline-sync" onclick="toggleOffline()">📶 Offline Active</div>
+                </div>
+
+                <div class="quantum-coach">
+                    <div class="coach-header">
+                        <div class="coach-avatar">Q</div>
+                        <h3>Quantum Coach</h3>
+                    </div>
+                    <div class="coach-body">
+                        <p class="coach-message">नमस्ते! (Welcome!) I can help you manage your farm's finances. Tap on the Market to see today's grain prices.</p>
+                    </div>
+                    <div class="coach-input-area">
+                        <div class="voice-indicator" onclick="simulateVoice()">
+                            <div class="voice-wave" id="voice-wave" style="display: none;"></div>
+                        </div>
+                        <input type="text" class="coach-input" placeholder="Ask in your language...">
+                        <button class="send-btn">➔</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Decision Modal -->
+        <div id="decision-modal" class="modal-overlay">
+            <div class="decision-card">
+                <h2 id="modal-title">Market Day</h2>
+                <p id="modal-desc">Grain prices are up by 20%! Will you sell your harvest now or wait for tomorrow?</p>
+                <button class="option-btn">Sell Now (+ ₹ 1,200)</button>
+                <button class="option-btn">Wait for tomorrow</button>
+                <button class="option-btn secondary" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>
+ 

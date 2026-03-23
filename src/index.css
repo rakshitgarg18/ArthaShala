@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #FDFBF4; /* Paper Cream */
+  --bg-secondary: #F7F5E9;
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --primary: #22C55E;
+  --primary-light: #DCFCE7;
+  --accent-orange: #F97316;
+  --accent-blue: #3B82F6;
+  --accent-yellow: #EAB308;
+  --border-muted: #E2E8F0;
+  --card-bg: #FFFFFF;
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--bg-primary)] text-[var(--text-primary)] antialiased selection:bg-green-100 overflow-hidden;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+  }
+  
+  .illustrative-card {
+    @apply bg-white rounded-[2.5rem] border border-[var(--border-muted)] shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-[#22C55E] text-white px-6 py-4 rounded-[1.5rem] font-black active:scale-95 transition-all shadow-lg shadow-green-500/20 hover:bg-green-600;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-[#1E293B] px-6 py-4 rounded-[1.5rem] font-black border-2 border-[#E2E8F0] active:scale-95 transition-all hover:bg-gray-50;
+  }
+
+  /* HUD Tokens - Floating illustrative elements */
+  .hud-token {
+    @apply flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-2xl border border-white shadow-lg shadow-black/5 active:scale-95 transition-transform;
+  }
+}
+
+.isometric-transform {
+  transform: rotateX(60deg) rotateZ(-45deg);
+  transform-style: preserve-3d;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 0; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+@keyframes waveform {
+  0%, 100% { height: 20%; }
+  50% { height: 100%; }
+}
+
+.animate-waveform {
+  animation: waveform 1s ease-in-out infinite;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-draw {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw 2s ease-out forwards;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E2E8F0;
+  border-radius: 10px;
+}
+
+/* ArthaShala Specific Styles */
+.village-bg {
+  background-color: #FDFBF4;
+  background-image: radial-gradient(#E2E8F0 1.2px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+
+.rural-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0c16.569 0 30 13.431 30 30S46.569 60 30 60 0 46.569 0 30 13.431 0 30 0zm0 10c-11.046 0-20 8.954-20 20s8.954 20 20 20 20-8.954 20-20-8.954-20-20-20z' fill='%2322C55E' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.microphone-button {
+  background: radial-gradient(circle at center, #22C55E, #16A34A);
+  box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4);
+}
+
+@keyframes soft-pulse {
+  0% { transform: scale(1); box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4); }
+  50% { transform: scale(1.08); box-shadow: 0 20px 60px rgba(34, 197, 94, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 15px 40px rgba(34, 197, 94, 0.4); }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 3s infinite ease-in-out;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes waveform {
+  0%, 100% { height: 8px; }
+  50% { height: 32px; }
+}
+
+.animate-waveform {
+  animation: waveform 1.2s ease-in-out infinite;
+}
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* Animation for the "Receipt" */
+@keyframes slide-up {
+  from { transform: translate(-50%, 100%); opacity: 0; }
+  to { transform: translate(-50%, -20px); opacity: 1; }
+}
+
+.animate-receipt {
+  animation: slide-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* ── PHASE 5: GAMIFICATION ANIMATIONS ────────────────── */
+
+@keyframes success-pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes failure-shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-10px); }
+  40%, 80% { transform: translateX(10px); }
+}
+
+@keyframes score-bubble {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+.animate-success-pop {
+  animation: success-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-failure-shake {
+  animation: failure-shake 0.4s ease-in-out;
+}
+
+.animate-score-bubble {
+  animation: score-bubble 1.5s ease-out forwards;
+}
+
+.text-glow-green {
+  text-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+}
+
+.text-glow-red {
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
+ 
+ 

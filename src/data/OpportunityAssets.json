@@ -1,0 +1,11 @@
+[
+  { "costThreshold": 500,   "name": "महीने भर का राशन",          "nameEn": "1 Month Family Ration",       "icon": "🌾" },
+  { "costThreshold": 2000,  "name": "अच्छी खाद और बीज",           "nameEn": "Quality Seeds & Fertilizer",  "icon": "🌱" },
+  { "costThreshold": 5000,  "name": "बच्चों की साल भर की फीस",    "nameEn": "1 Year School Fees",          "icon": "🏫" },
+  { "costThreshold": 10000, "name": "पक्की छत का सामान",           "nameEn": "Roofing Materials",           "icon": "🏠" },
+  { "costThreshold": 15000, "name": "सोलर पंप",                    "nameEn": "Solar Water Pump",            "icon": "💧" },
+  { "costThreshold": 25000, "name": "एक दुधारू गाय",               "nameEn": "A Milch Cow",                 "icon": "🐄" },
+  { "costThreshold": 50000, "name": "छोटा ट्रैक्टर डाउनपेमेंट",   "nameEn": "Tractor Downpayment",         "icon": "🚜" }
+]
+ 
+ 
