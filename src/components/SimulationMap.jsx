@@ -12,6 +12,7 @@ import learningModules from '../data/learningModules';
 import DecisionModal from './DecisionModal';
 import OutcomeOverlay from './OutcomeOverlay';
 import ArthaScoreDetails from './ArthaScoreDetails';
+console.log("SimulationMap: Initializing...");
 
 const MAP_SIZE = 800;
 
@@ -98,7 +99,7 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
 
   useEffect(() => {
     // CAMPAIGN MODE: Trigger Crisis immediately on mount
-    if (activeModuleId) {
+    if (activeModuleId && activeModuleId !== 'seed_trap') {
       const module = learningModules.find(l => l.id === activeModuleId);
       if (module) {
         setPendingDecision({

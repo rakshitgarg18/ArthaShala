@@ -67,9 +67,9 @@ export default function LessonViewer({ lesson, onStartDemo }) {
       </header>
 
       {/* Slide Content Overlay */}
-      <div className="relative flex-1 px-8 flex flex-col justify-end pb-24 z-10">
+      <div className="relative flex-1 px-8 flex flex-col z-10 overflow-y-auto pt-10 pb-32">
          {!showInteraction ? (
-           <div className="animate-in slide-in-from-bottom-8 fade-in duration-700">
+           <div className="animate-in slide-in-from-bottom-8 fade-in duration-700 mt-auto">
               <h2 className="text-sm font-black uppercase tracking-[0.3em] text-blue-400 mb-2">
                 Part {activeSlide + 1}
               </h2>
@@ -113,9 +113,11 @@ export default function LessonViewer({ lesson, onStartDemo }) {
               )}
            </div>
          )}
+      </div>
 
-         {/* Navigation Controls */}
-         <div className="flex gap-4 mt-12 w-full">
+      {/* Fixed Bottom Navigation Container */}
+      <div className="absolute bottom-0 inset-x-0 p-8 pt-0 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent z-20">
+         <div className="flex gap-4 w-full">
             {!selectedDecision ? (
               <>
                 <button 
@@ -135,8 +137,11 @@ export default function LessonViewer({ lesson, onStartDemo }) {
               </>
             ) : (
               <button 
-                onClick={onStartDemo}
-                className="w-full py-8 bg-gradient-to-r from-amber-500 to-orange-600 border-t border-white/20 text-white rounded-[2.5rem] font-black text-2xl animate-bounce shadow-[0_20px_60px_-15px_rgba(245,158,11,0.6)] active:scale-95 transition-all"
+                onClick={() => {
+                  console.log("Navigating to Map Demo...");
+                  onStartDemo();
+                }}
+                className="w-full py-8 bg-gradient-to-r from-amber-500 to-orange-600 border border-white/20 text-white rounded-[2.5rem] font-black text-2xl animate-pulse shadow-[0_20px_60px_-15px_rgba(245,158,11,0.6)] active:scale-95 transition-all"
               >
                  मैप पर आजमाएं (Try on Map) ➔
               </button>
