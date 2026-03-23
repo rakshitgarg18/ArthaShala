@@ -63,7 +63,6 @@ export default function GameController() {
               )}
             </>
           )}
-
           {/* 2. GYAN KENDRA (MODULE HUB) */}
           {currentView === 'GYAN_KENDRA' && (
             <GyanKendra 
@@ -71,6 +70,10 @@ export default function GameController() {
                 setActiveModuleId(id);
                 setCurrentView('LESSON');
               }} 
+              onExploreVillage={() => {
+                setActiveModuleId(null);
+                setCurrentView('MAP_DEMO');
+              }}
             />
           )}
 
