@@ -14,6 +14,7 @@ import { useGameClock } from '../hooks/useGameClock';
 import TimeTracker from './TimeTracker';
 import SchemeEligibilityReport from './SchemeEligibilityReport';
 import OpportunityCostScreen from './OpportunityCostScreen';
+import ArthaScoreDetails from './ArthaScoreDetails';
 
 const MAP_SIZE = 800;
 
@@ -93,6 +94,7 @@ export default function SimulationMap({ onOpenLedger, profile }) {
   const [isManualPaused, setIsManualPaused] = useState(false);
   const [lastDecision, setLastDecision] = useState(null);
   const [showSchemes, setShowSchemes] = useState(false);
+  const [showScoreDetails, setShowScoreDetails] = useState(false);
   const mapScrollRef = useRef(null);
 
   useEffect(() => {
@@ -225,13 +227,16 @@ export default function SimulationMap({ onOpenLedger, profile }) {
                 </div>
              </div>
              
-             {/* Artha Score - Indigo Theme */}
-             <div className="bg-indigo-50/50 rounded-[24px] p-3 border-2 border-indigo-100 shadow-sm shadow-indigo-100 flex flex-col items-center group hover:border-indigo-400 transition-all">
-                <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-0.5">
-                  {language === 'en' ? 'ARTHA SCORE' : 'स्कोर'}
-                </span>
-                <div className="text-indigo-700 font-black text-lg tabular-nums">{arthaScore}</div>
-             </div>
+              {/* Artha Score - Indigo Theme */}
+              <div 
+                className="bg-indigo-50/50 rounded-[24px] p-3 border-2 border-indigo-100 shadow-sm shadow-indigo-100 flex flex-col items-center group hover:border-indigo-400 transition-all cursor-pointer active:scale-95"
+                onClick={() => setShowScoreDetails(true)}
+              >
+                 <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-0.5">
+                   {language === 'en' ? 'ARTHA SCORE' : 'स्कोर'}
+                 </span>
+                 <div className="text-indigo-700 font-black text-lg tabular-nums">{arthaScore}</div>
+              </div>
 
              {/* Total Debt - Amber/Red Theme */}
              <div 
@@ -397,6 +402,15 @@ export default function SimulationMap({ onOpenLedger, profile }) {
       )}
 
       {activeOutcome && <OutcomeOverlay {...activeOutcome} language={language} onComplete={() => setActiveOutcome(null)} />}
+
+      {showScoreDetails && (
+        <ArthaScoreDetails 
+          currentScore={arthaScore}
+          walletBalance={walletBalance}
+          language={language}
+          onClose={() => setShowScoreDetails(false)}
+        />
+      )}
     </div>
   );
 }
