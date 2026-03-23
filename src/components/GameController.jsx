@@ -4,7 +4,6 @@ import ProfileSelector from './ProfileSelector';
 import SimulationMap from './SimulationMap';
 import LedgerView from './LedgerView';
 import { useFinancials } from '../context/FinancialContext.jsx';
-import ProfileSetup from './ProfileSetup';
 import GyanKendra from './GyanKendra';
 import LessonViewer from './LessonViewer';
 import BhavishyaSlider from './BhavishyaSlider';
@@ -32,11 +31,13 @@ export default function GameController() {
 
   const handleProfileSelect = (profile) => {
     setSelectedProfile(profile);
-    setOnboardingScreen('setup');
-  };
-
-  const handleProfileComplete = (setupData) => {
-    setFarmerProfile({ profession: selectedProfile, ...setupData, name: 'Farmer' });
+    // Shortcut: Directly complete profile with default values to skip "Your Details" page
+    setFarmerProfile({ 
+      profession: profile, 
+      landSize: 2, 
+      incomeGroup: 'medium', 
+      name: 'Farmer' 
+    });
     setCurrentView('GYAN_KENDRA');
   };
 
@@ -58,9 +59,6 @@ export default function GameController() {
               )}
               {onboardingScreen === 'profile' && (
                 <ProfileSelector language={language} onSelect={handleProfileSelect} />
-              )}
-              {onboardingScreen === 'setup' && (
-                <ProfileSetup language={language} onProfileComplete={handleProfileComplete} />
               )}
             </>
           )}
