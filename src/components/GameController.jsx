@@ -11,6 +11,7 @@ import BhavishyaSlider from './BhavishyaSlider';
 import learningModules from '../data/learningModules';
 
 export default function GameController() {
+  const [onboardingScreen, setOnboardingScreen] = useState('language');
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [lastChoice, setLastChoice] = useState(null);
 
