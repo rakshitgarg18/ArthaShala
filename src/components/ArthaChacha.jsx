@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import chachaAvatar from '../assets/artha_chacha.png';
 
 const T = {
   en: {
@@ -176,10 +175,10 @@ export default function ArthaChacha({
         )}
         <div className={`relative w-28 h-28 rounded-full overflow-hidden border-2 border-white bg-white shadow-2xl transition-transform duration-500 ${avatarExpression === 'worried' ? 'scale-90' : 'scale-100'}`}>
           <img 
-            src={chachaAvatar} 
+            src="/assets/artha_chacha.png" 
             alt="Artha Chacha" 
             className="w-full h-full object-cover bg-slate-100"
-            onError={(e) => { e.target.style.opacity = '0.7'; e.target.src = "https://ui-avatars.com/api/?name=AC&background=indigo&color=fff"; }}
+            onError={(e) => { e.target.style.opacity = '0.5'; e.target.style.backgroundColor = '#94a3b8'; }}
           />
         </div>
         {/* Subtle Glow Ring */}

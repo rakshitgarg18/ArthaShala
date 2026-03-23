@@ -9,7 +9,6 @@ import OutcomeOverlay from './OutcomeOverlay';
 import InterventionModal from './InterventionModal';
 import ArthaChacha from './ArthaChacha';
 import BoloEngine from './BoloEngine';
-import villageMap from '../assets/village_map.png';
 import { useGameClock } from '../hooks/useGameClock';
 import TimeTracker from './TimeTracker';
 import SchemeEligibilityReport from './SchemeEligibilityReport';
@@ -272,7 +271,7 @@ export default function SimulationMap({ onOpenLedger, profile }) {
          )}
          <div style={{ position: 'relative', width: MAP_SIZE, height: MAP_SIZE, backgroundColor: '#F4EBD9' }} className="shadow-inner">
            <img 
-             src={villageMap} 
+             src="/assets/village_map.png" 
              alt="Village Map" 
              style={{ width: MAP_SIZE, height: MAP_SIZE }} 
              draggable={false} 
