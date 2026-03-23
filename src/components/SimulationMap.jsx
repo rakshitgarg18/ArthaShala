@@ -89,6 +89,11 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
   const [lastDecision, setLastDecision] = useState(null);
   const [showSchemes, setShowSchemes] = useState(false);
   const [showScoreDetails, setShowScoreDetails] = useState(false);
+  
+  // Simulation Step Tracking
+  const [simStep, setSimStep] = useState('seed'); // 'seed' | 'fertilizer' | 'transition' | 'harvest'
+  const [simChoices, setSimChoices] = useState({ seed: null, fertilizer: null });
+  const [timeTransition, setTimeTransition] = useState(null); // null | 'week2' | 'month1' | 'harvest'
   const mapScrollRef = useRef(null);
 
   useEffect(() => {
@@ -148,6 +153,23 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
       return;
     }
 
+    // SEED TRAP SCENARIO OVERRIDE
+    if (activeModuleId === 'seed_trap') {
+      if (locId === 'seed_shop' && simStep === 'seed') {
+         setSimChoices(prev => ({ ...prev, seed: action.type }));
+         setSimStep('fertilizer');
+         setActiveLocation(null);
+         return;
+      }
+      if (locId === 'fertilizer' && simStep === 'fertilizer') {
+         setSimChoices(prev => ({ ...prev, fertilizer: action.type }));
+         setSimStep('transition');
+         setActiveLocation(null);
+         startTimeline();
+         return;
+      }
+    }
+
     const finalAmount = action.amount;
     const finalType = action.type;
 
@@ -191,6 +213,23 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
     }
 
     handleAction({ ...action, amount: cost }, locId);
+  };
+
+  const startTimeline = () => {
+    setTimeTransition('week2');
+    setTimeout(() => setTimeTransition('month1'), 1500);
+    setTimeout(() => setTimeTransition('harvest'), 3000);
+    setTimeout(() => {
+      setTimeTransition(null);
+      // Determine Outcome
+      let outcome = 'mid';
+      const { seed, fertilizer } = simChoices;
+      if (seed === 'hybrid_seeds' && fertilizer === 'organic_manure') outcome = 'good'; // Adjusted for actual types
+      if (seed === 'hybrid_seeds' && fertilizer === 'fertilizer_bag') outcome = 'good'; 
+      if (fertilizer === 'buy_excess_urea') outcome = 'bad';
+      
+      onChoiceMade(outcome);
+    }, 4500);
   };
 
   const handleVoiceCommand = (intent) => {
@@ -291,9 +330,24 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
              setActiveLocation={setActiveLocation} 
              language={language}
              activeTourStep={activeTourStep}
-              highlights={pendingDecision?.isCrisis ? ['bank', 'moneylender'] : []} 
+              highlights={activeModuleId === 'seed_trap' ? [simStep === 'seed' ? 'seed_shop' : simStep === 'fertilizer' ? 'fertilizer' : ''] : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])} 
            />
          </div>
+
+          {/* Timeline Transition Overlay */}
+          {timeTransition && (
+            <div className="absolute inset-0 z-[5000] bg-slate-900/40 backdrop-blur-md flex items-center justify-center p-8">
+               <div className="w-full max-w-xs bg-white rounded-[3rem] p-10 flex flex-col items-center shadow-2xl animate-in zoom-in-95 duration-500">
+                  <div className="w-24 h-24 bg-amber-500 rounded-full flex items-center justify-center text-4xl animate-bounce mb-6 border-8 border-amber-100 italic font-black text-white">
+                    {timeTransition === 'week2' ? '🌱' : timeTransition === 'month1' ? '🌿' : '🌾'}
+                  </div>
+                  <h2 className="text-sm font-black uppercase tracking-[0.4em] text-slate-400 mb-2">Time Passing...</h2>
+                  <h1 className="text-4xl font-black text-slate-900 italic tracking-tighter">
+                    {timeTransition === 'week2' ? 'Week 2' : timeTransition === 'month1' ? 'Month 1' : 'Harvest Time!'}
+                  </h1>
+               </div>
+            </div>
+          )}
       </div>
 
       {/* ── BOLO ENGINE FIXED AT BOTTOM ── */}

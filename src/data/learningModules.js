@@ -1,52 +1,75 @@
 const learningModules = [
   {
     id: "seed_trap",
-    icon: "🌱",
-    title: "बीज का कर्ज (The Seed Trap)",
+    icon: "🌾",
+    title: "उर्वरक का जाल (The Soil Trap)",
     difficulty: "Easy",
     rewardType: "arthaScore",
     rewardAmount: 20,
     slides: [
       { 
-        visual: "🗣️", 
-        text: "चाचा कहते हैं: साहूकार कहता है 'सिर्फ 2 रुपये सैकड़ा महीना'। सुनने में कम लगता है ना? (Moneylender says 'Just ₹2 per 100 a month'. Sounds small, right?)" 
+        visual: "🚜", 
+        text: "खेती का नया सीजन शुरू हो गया है! अच्छी फसल के लिए आपको सही बीज और खाद का चुनाव करना होगा। (New crop season! You must pick the right seeds and fertilizer for a good harvest.)" 
       },
       { 
-        visual: "📉", 
-        text: "लेकिन 2% महीना यानी साल का 24% से ज्यादा! आपका सारा मुनाफा सिर्फ ब्याज चुकाने में चला जाएगा। (But 2% a month is over 24% a year! Your entire profit will go to interest.)" 
+        visual: "💰", 
+        text: "दुकानदार कहता है: 'सस्ता यूरिया ले जाओ, फसल रातों-रात बढ़ जाएगी!' यह सुनने में बहुत अच्छा लगता है। (Shopkeeper says: 'Take cheap urea, your crop will grow overnight!' Sounds tempting.)" 
       },
       { 
-        visual: "🏦", 
-        text: "बैंक का KCC (किसान क्रेडिट कार्ड) सालाना सिर्फ 4% ब्याज लेता है। हमेशा बैंक चुनें! (Bank's KCC charges only 4% a year. Always choose the bank!)" 
+        visual: "⚠️", 
+        text: "लेकिन सावधान! ज़्यादा यूरिया से शुरू में फसल अच्छी दिखती है, पर धीरे-धीरे ज़मीन बंजर हो जाती है। (But wait! Excess urea makes crops look good at first, but damages soil over time.)" 
       }
     ],
-    quiz: {
-      question: "रामू काका को बीज के लिए ₹15,000 चाहिए। आप उन्हें क्या सलाह देंगे? (Ramu Kaka needs ₹15k for seeds. What is your advice?)",
+    interaction: {
+      type: "decision",
+      question: "आप अपने खेत को कैसे तैयार करेंगे? (How will you prepare your farm?)",
       options: [
-        { text: "साहूकार से तुरंत नकद ले लें (Take instant cash from Moneylender)", isCorrect: false },
-        { text: "बैंक जाकर KCC लोन लें (Go to the Bank for KCC Loan)", isCorrect: true }
+        {
+          id: "cheap",
+          text: "सस्ता रास्ता: सामान्य बीज + ज़्यादा यूरिया (Cheap path: Basic seeds + Excess urea)",
+          foreshadowing: "शायद शुरू में पैसा बचे, पर मिट्टी का क्या? (Money saved now, but what about the soil?)",
+          isGood: false
+        },
+        {
+          id: "smart",
+          text: "समझदार रास्ता: हाइब्रिड बीज + संतुलित खाद (Smart path: Hybrid seeds + Balanced fertilizer)",
+          foreshadowing: "लंबी अवधि के फायदे के लिए सही निवेश। (A right investment for long-term gains.)",
+          isGood: true
+        }
       ]
     },
-    // Simulation Data for Map
     simulation: {
-      crisis: "बुवाई का समय आ गया है! अच्छी फसल के लिए तुरंत ₹15,000 के बीज और खाद चाहिए।",
-      choices: {
+      steps: ["seed_shop", "fertilizer"],
+      outcomes: {
         good: {
-          text: "KCC लोन आवेदन (4% ब्याज)",
+          title: "शानदार फसल! (Great Harvest!)",
+          description: "हाइब्रिड बीज और संतुलित खाद से मिट्टी भी स्वस्थ रही और मुनाफा भी हुआ। (Hybrid seeds and balanced fertilizer kept soil healthy and maximized profit.)",
           arthaChange: 15,
+          impact: "Crop loss: 0%, Income: +₹25,000",
           visual: "lush_field",
-          lessonText: "शानदार! 4% ब्याज के कारण आपका मुनाफा आपके पास रहा। आपकी फसल सुरक्षित है।"
+          color: "green"
+        },
+        mid: {
+          title: "औसत नतीजा (Average Result)",
+          description: "चुनाव ठीक था, पर बेहतर किया जा सकता था। मिट्टी अभी भी ठीक है। (Fair choices, but could be better. Soil is still okay.)",
+          arthaChange: 5,
+          impact: "Crop loss: 10%, Income: +₹10,000",
+          visual: "fair_field",
+          color: "yellow"
         },
         bad: {
-          text: "साहूकार से तुरंत नकद (24% ब्याज)",
+          title: "मिट्टी बंजर! (Soil Damaged!)",
+          description: "ज़्यादा यूरिया ने ज़मीन की जान निकाल दी। अगली बार पैदावार बहुत कम होगी। (Excess urea drained the soil. Future yields will be very low.)",
           arthaChange: -20,
+          impact: "Crop loss: 40% (Next season), Income loss: -₹15,000",
           visual: "seized_field",
-          lessonText: "साहूकार के 24% चक्रवृद्धि ब्याज ने आपकी ज़मीन निगल ली। आपने अपना भविष्य बेच दिया।"
+          color: "red"
         }
       },
       images: {
         present: "https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&w=800&q=80",
         lush_field: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80",
+        fair_field: "https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&w=800&q=80",
         seized_field: "https://images.unsplash.com/photo-1516710404095-23136209ed9e?auto=format&fit=crop&w=800&q=80"
       }
     }
