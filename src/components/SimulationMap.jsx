@@ -27,7 +27,7 @@ const CategoryColors = {
 };
 
 // ── SUB-COMPONENT: MAP MARKERS (Phase 8 Aesthetic) ──
-const MapMarkers = ({ activeLocation, setActiveLocation, language, activeTourStep, highlights }) => {
+const MapMarkers = ({ activeLocation, onLocationClick, language, activeTourStep, highlights }) => {
   return (
     <>
       {Object.entries(LOCATIONS).map(([id, loc]) => {
@@ -39,9 +39,9 @@ const MapMarkers = ({ activeLocation, setActiveLocation, language, activeTourSte
         return (
           <button
             key={id}
-            className={`absolute flex flex-col items-center transform -translate-x-1/2 -translate-y-[90%] transition-all cursor-pointer ${isActive ? 'scale-125 z-[60]' : 'hover:scale-110 hover:z-[60]'} ${isTarget || isHighlighted ? 'z-[2000]' : 'z-10'}`}
+            className={`absolute flex flex-col items-center transform -translate-x-1/2 -translate-y-[90%] transition-all cursor-pointer ${isActive ? 'scale-125 z-[60]' : 'hover:scale-110 hover:z-[60]'} ${isTarget || isHighlighted ? 'z-[2500]' : 'z-10'}`}
             style={{ left: `${loc.pos.x}%`, top: `${loc.pos.y}%` }}
-            onClick={() => setActiveLocation({ id, ...loc })}
+            onClick={() => onLocationClick({ id, ...loc })}
           >
             {(isTarget || isHighlighted) && (
               <div className={`absolute top-2 w-14 h-14 ${isHighlighted ? 'bg-amber-400' : 'bg-blue-400'} rounded-full animate-ping opacity-60 pointer-events-none`} />
@@ -91,10 +91,20 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
   const [showSchemes, setShowSchemes] = useState(false);
   const [showScoreDetails, setShowScoreDetails] = useState(false);
   
-  // Scenario state (replaces old simStep/simChoices/timeTransition for modules)
+  // Scenario state
   const [scenarioHighlights, setScenarioHighlights] = useState([]);
   const [mapTint, setMapTint] = useState(null);
+  const scenarioTapHandlerRef = useRef(null); // receives tap handler from SeedTrapScenario
   const mapScrollRef = useRef(null);
+
+  // Intercept location clicks: route to scenario if in module mode
+  const handleLocationClick = (loc) => {
+    if (activeModuleId === 'seed_trap' && scenarioTapHandlerRef.current) {
+      scenarioTapHandlerRef.current(loc.id);
+      return; // Don't open the default location modal
+    }
+    setActiveLocation(loc);
+  };
 
   useEffect(() => {
     // CAMPAIGN MODE: Trigger Crisis immediately on mount
@@ -333,7 +343,7 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
            
            <MapMarkers 
              activeLocation={activeLocation} 
-             setActiveLocation={setActiveLocation} 
+             onLocationClick={handleLocationClick}
              language={language}
              activeTourStep={activeTourStep}
              highlights={activeModuleId === 'seed_trap' ? scenarioHighlights : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])}
@@ -351,6 +361,7 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
              onComplete={() => onModuleComplete?.()}
              onHighlightsChange={setScenarioHighlights}
              onMapTintChange={setMapTint}
+             onRegisterTapHandler={(fn) => { scenarioTapHandlerRef.current = fn; }}
            />
          )}
        </div>
