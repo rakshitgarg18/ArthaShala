@@ -254,13 +254,12 @@ function ExplainCard({ isGood, onClose }) {
 }
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────
-export default function SeedTrapScenario({ onComplete, onHighlightsChange, onMapTintChange, onRegisterTapHandler }) {
+export default function SeedTrapScenario({ onComplete, onShowInsight, onHighlightsChange, onMapTintChange, onRegisterTapHandler }) {
   const [stage, setStage] = useState('intro');
   const [timeStage, setTimeStage] = useState('week2');
   const [showPicker, setShowPicker] = useState(false);
   const [seedType, setSeedType] = useState(null);
   const [outcome, setOutcome] = useState(null);
-  const [showExplain, setShowExplain] = useState(false);
 
   // Update parent with which pins should glow
   useEffect(() => {
@@ -356,16 +355,11 @@ export default function SeedTrapScenario({ onComplete, onHighlightsChange, onMap
 
       {/* Outcome card */}
       {stage === 'outcome' && outcome && (
-        <>
-          <OutcomeCard
-            outcome={outcome}
-            onDone={onComplete}
-            onWantExplanation={() => setShowExplain(true)}
-          />
-          {showExplain && (
-            <ExplainCard isGood={outcome.color === 'green'} onClose={() => setShowExplain(false)} />
-          )}
-        </>
+        <OutcomeCard
+          outcome={outcome}
+          onDone={onComplete}
+          onWantExplanation={() => onShowInsight?.(outcome)}
+        />
       )}
     </>
   );

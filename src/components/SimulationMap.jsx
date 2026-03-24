@@ -68,7 +68,7 @@ const MapMarkers = ({ activeLocation, onLocationClick, language, activeTourStep,
   );
 };
 
-export default function SimulationMap({ onOpenLedger, profile, activeModuleId, onChoiceMade, onModuleComplete, onBack }) {
+export default function SimulationMap({ onOpenLedger, profile, activeModuleId, onChoiceMade, onModuleComplete, onShowInsight, onBack }) {
   const { 
     walletBalance, 
     bankDebt, 
@@ -359,6 +359,7 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
          {activeModuleId === 'seed_trap' && (
            <SeedTrapScenario
              onComplete={() => onModuleComplete?.()}
+             onShowInsight={onShowInsight}
              onHighlightsChange={setScenarioHighlights}
              onMapTintChange={setMapTint}
              onRegisterTapHandler={(fn) => { scenarioTapHandlerRef.current = fn; }}

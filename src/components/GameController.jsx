@@ -4,10 +4,12 @@ import ProfileSelector from './ProfileSelector';
 import SimulationMap from './SimulationMap';
 import { useFinancials } from '../context/FinancialContext.jsx';
 import GyanKendra from './GyanKendra';
+import InsightScreen from './InsightScreen';
 
 export default function GameController() {
   const [onboardingScreen, setOnboardingScreen] = useState('language');
   const [selectedProfile, setSelectedProfile] = useState(null);
+  const [insightOutcome, setInsightOutcome] = useState(null); // stores outcome for InsightScreen
 
   const { 
     language, setLanguage, 
@@ -25,6 +27,18 @@ export default function GameController() {
   const handleProfileSelect = (profile) => {
     setSelectedProfile(profile);
     setFarmerProfile({ profession: profile, landSize: 2, incomeGroup: 'medium', name: 'Farmer' });
+    setCurrentView('GYAN_KENDRA');
+  };
+
+  const handleShowInsight = (outcome) => {
+    setInsightOutcome(outcome);
+    setCurrentView('INSIGHT');
+  };
+
+  const handleInsightDone = () => {
+    setInsightOutcome(null);
+    completeModule(activeModuleId);
+    // Navigate to Gyan Kendra — user can choose another topic
     setCurrentView('GYAN_KENDRA');
   };
 
@@ -52,7 +66,7 @@ export default function GameController() {
             <GyanKendra 
               onSelectModule={(id) => {
                 setActiveModuleId(id);
-                setCurrentView('MAP_DEMO'); // Go straight to map — map is the experience
+                setCurrentView('MAP_DEMO');
               }} 
               onExploreVillage={() => {
                 setActiveModuleId(null);
@@ -61,14 +75,23 @@ export default function GameController() {
             />
           )}
 
-          {/* 3. SIMULATION MAP — handles EVERYTHING: events, decisions, consequences */}
+          {/* 3. SIMULATION MAP — handles events, decisions, consequences */}
           {currentView === 'MAP_DEMO' && (
             <SimulationMap
               onOpenLedger={() => {}}
               profile={selectedProfile}
               activeModuleId={activeModuleId}
               onModuleComplete={() => completeModule(activeModuleId)}
+              onShowInsight={handleShowInsight}
               onBack={() => setCurrentView('GYAN_KENDRA')}
+            />
+          )}
+
+          {/* 4. INSIGHT SCREEN — explains what happened and what should have been done */}
+          {currentView === 'INSIGHT' && (
+            <InsightScreen
+              outcome={insightOutcome}
+              onDone={handleInsightDone}
             />
           )}
         </div>
