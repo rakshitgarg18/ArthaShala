@@ -331,7 +331,11 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
              setActiveLocation={setActiveLocation} 
              language={language}
              activeTourStep={activeTourStep}
-              highlights={activeModuleId === 'seed_trap' ? [simStep === 'seed' ? 'seed_shop' : simStep === 'fertilizer' ? 'fertilizer' : ''] : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])} 
+              highlights={
+                activeModuleId === 'seed_trap'
+                  ? (simStep === 'seed' ? ['seed_shop'] : simStep === 'fertilizer' ? ['fertilizer'] : simStep === 'farm' ? ['farm'] : [])
+                  : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])
+              }
            />
          </div>
 

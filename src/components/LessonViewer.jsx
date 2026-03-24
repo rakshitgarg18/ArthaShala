@@ -1,154 +1,211 @@
 import React, { useState } from 'react';
 
+// Screen 1: Action Cards
+function ActionScreen({ screen, onNext }) {
+  const [picked, setPick] = useState(null);
+
+  const colorMap = {
+    amber: {
+      card: 'border-amber-400 bg-amber-950/60',
+      tag: 'bg-amber-500 text-white',
+      icon: 'bg-amber-400/20',
+    },
+    green: {
+      card: 'border-green-400 bg-green-950/60',
+      tag: 'bg-green-500 text-white',
+      icon: 'bg-green-400/20',
+    },
+  };
+
+  return (
+    <div className="h-full flex flex-col relative">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-green-950 to-slate-950" />
+      <div className="absolute inset-x-0 top-0 h-48 bg-[url('https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&w=800&q=40')] bg-cover bg-center opacity-20" />
+
+      <div className="relative z-10 flex flex-col h-full px-6 pt-14 pb-6">
+        {/* Artha Chacha voice bubble */}
+        <div className="flex items-start gap-3 mb-8">
+          <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-2xl flex-shrink-0 border-2 border-amber-300 shadow-lg">👴</div>
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl rounded-tl-sm px-5 py-4 flex-1">
+            <p className="text-white font-bold text-sm leading-relaxed italic">
+              "{screen.voiceover}"
+            </p>
+          </div>
+        </div>
+
+        {/* Title */}
+        <div className="mb-6">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-amber-400">🌾 Season Start</span>
+          <h1 className="text-3xl font-black text-white italic tracking-tighter leading-tight mt-1">
+            {screen.title}
+          </h1>
+          <p className="text-slate-400 font-bold text-sm mt-1">{screen.subtitle}</p>
+        </div>
+
+        {/* Action Cards */}
+        <div className="flex flex-col gap-4 flex-1">
+          {screen.actions.map((action) => {
+            const c = colorMap[action.color] || colorMap.amber;
+            const isSelected = picked === action.id;
+            return (
+              <button
+                key={action.id}
+                onClick={() => setPick(action.id)}
+                className={`w-full p-5 rounded-[2rem] border-2 text-left flex items-center gap-5 transition-all active:scale-95 ${isSelected ? c.card + ' scale-[1.02] shadow-2xl' : 'border-white/10 bg-white/5 hover:bg-white/10'}`}
+              >
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0 ${isSelected ? c.icon : 'bg-white/5'}`}>
+                  {action.icon}
+                </div>
+                <div className="flex-1">
+                  <div className="font-black text-white text-base leading-tight">{action.label}</div>
+                  <div className="text-slate-400 text-sm mt-0.5">{action.sublabel}</div>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="font-black text-white bg-white/10 px-3 py-1 rounded-full text-sm">{action.cost}</span>
+                    <span className={`px-2 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${isSelected ? c.tag : 'bg-white/10 text-white/50'}`}>{action.tag}</span>
+                  </div>
+                </div>
+                {isSelected && <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white font-black flex-shrink-0">✓</div>}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Next Button */}
+        <button
+          onClick={() => picked && onNext(picked)}
+          className={`mt-6 w-full py-5 rounded-[2rem] font-black text-base uppercase tracking-widest transition-all active:scale-95 ${picked ? 'bg-amber-500 text-white shadow-[0_8px_30px_-5px_rgba(245,158,11,0.5)]' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}
+        >
+          {picked ? 'आगे बढ़ो (Continue) ➔' : 'पहले चुनो (Pick one first)'}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Screen 2: Warning Story
+function WarningScreen({ screen, onNext }) {
+  return (
+    <div className="h-full flex flex-col relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-amber-950 to-red-950" />
+
+      <div className="relative z-10 flex flex-col h-full px-6 pt-14 pb-6 justify-between">
+        {/* Visual */}
+        <div className="flex flex-col items-center mt-4 mb-6">
+          <div className="w-32 h-32 rounded-full bg-amber-500/20 border-4 border-amber-500/40 flex items-center justify-center text-7xl animate-pulse mb-4">
+            ⚠️
+          </div>
+          <span className="text-amber-400 font-black uppercase tracking-[0.3em] text-xs">Soil Alert</span>
+        </div>
+
+        {/* Artha Chacha */}
+        <div className="flex items-start gap-3 mb-6">
+          <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-2xl flex-shrink-0 border-2 border-amber-300">👴</div>
+          <div className="bg-white/10 border border-white/20 rounded-3xl rounded-tl-sm px-5 py-4 flex-1">
+            <p className="text-white font-bold text-sm italic leading-relaxed">
+              "{screen.voiceover}"
+            </p>
+          </div>
+        </div>
+
+        {/* Two-column comparison */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="bg-green-900/40 border border-green-500/30 rounded-3xl p-4 flex flex-col items-center gap-2">
+            <span className="text-3xl">🌿</span>
+            <p className="text-green-300 font-black text-xs text-center uppercase tracking-wide">Pehle<br/>Short-term</p>
+            <p className="text-white font-bold text-sm text-center">अच्छी फसल</p>
+          </div>
+          <div className="bg-red-900/40 border border-red-500/30 rounded-3xl p-4 flex flex-col items-center gap-2">
+            <span className="text-3xl">🏜️</span>
+            <p className="text-red-400 font-black text-xs text-center uppercase tracking-wide">Baad Mein<br/>Long-term</p>
+            <p className="text-white font-bold text-sm text-center">बंजर मिट्टी</p>
+          </div>
+        </div>
+
+        <button
+          onClick={onNext}
+          className="w-full py-5 bg-white/10 border border-white/20 text-white rounded-[2rem] font-black text-sm uppercase tracking-widest active:scale-95 transition-all"
+        >
+          समझ गया (Got It) ➔
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Screen 3: Bridge to Map
+function BridgeScreen({ screen, onStartDemo }) {
+  return (
+    <div className="h-full flex flex-col relative overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&w=800&q=60"
+          className="w-full h-full object-cover brightness-[0.3]"
+          alt=""
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent" />
+      </div>
+
+      <div className="relative z-10 flex flex-col h-full items-center justify-end px-6 pb-10">
+        {/* Map preview icon */}
+        <div className="w-32 h-32 rounded-full border-4 border-amber-400/50 bg-amber-500/20 backdrop-blur-md flex items-center justify-center text-6xl mb-8 animate-pulse shadow-[0_0_60px_rgba(245,158,11,0.3)]">
+          🗺️
+        </div>
+
+        <span className="text-amber-400 font-black uppercase tracking-[0.4em] text-[10px] mb-3">Ready to Practice?</span>
+        <h1 className="text-4xl font-black text-white italic tracking-tighter text-center leading-tight mb-3">
+          {screen.title}
+        </h1>
+        <p className="text-slate-400 font-bold text-sm text-center mb-10">
+          {screen.subtitle}
+        </p>
+
+        {/* Chip hints */}
+        <div className="flex gap-2 mb-10 flex-wrap justify-center">
+          {['🏪 Seed Shop', '🧪 Fertilizer', '🌾 Your Farm'].map((h) => (
+            <span key={h} className="px-4 py-2 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold text-xs rounded-full">
+              {h}
+            </span>
+          ))}
+        </div>
+
+        <button
+          onClick={onStartDemo}
+          className="w-full py-7 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-[2.5rem] font-black text-2xl shadow-[0_20px_60px_-10px_rgba(245,158,11,0.5)] active:scale-95 transition-all border border-amber-300/30"
+        >
+          {screen.cta}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Main LessonViewer
 export default function LessonViewer({ lesson, onStartDemo }) {
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [showInteraction, setShowInteraction] = useState(false);
-  const [selectedDecision, setSelectedDecision] = useState(null);
+  const [screenIdx, setScreenIdx] = useState(0);
+  const [firstAction, setFirstAction] = useState(null);
 
   if (!lesson) return null;
 
-  const slides = lesson.slides || [];
-  const maxSlides = slides.length;
-  const interaction = lesson.interaction;
+  const screens = lesson.screens || [];
+  const current = screens[screenIdx];
 
-  const handleNext = () => {
-    if (activeSlide < maxSlides - 1) {
-      setActiveSlide(activeSlide + 1);
-    } else {
-      setShowInteraction(true);
-    }
+  if (!current) return null;
+
+  const handleNext = (actionId) => {
+    if (actionId) setFirstAction(actionId);
+    setScreenIdx((i) => Math.min(i + 1, screens.length - 1));
   };
 
-  const handlePrev = () => {
-    if (showInteraction) {
-      setShowInteraction(false);
-      setSelectedDecision(null);
-    } else if (activeSlide > 0) {
-      setActiveSlide(activeSlide - 1);
-    }
-  };
+  if (current.type === 'action') {
+    return <ActionScreen key={screenIdx} screen={current} onNext={handleNext} />;
+  }
+  if (current.type === 'story') {
+    return <WarningScreen key={screenIdx} screen={current} onNext={() => handleNext()} />;
+  }
+  if (current.type === 'bridge') {
+    return <BridgeScreen key={screenIdx} screen={current} onStartDemo={onStartDemo} />;
+  }
 
-  const handleDecision = (optionId) => {
-    setSelectedDecision(optionId);
-  };
-
-  const selectedOption = interaction?.options.find(opt => opt.id === selectedDecision);
-
-  return (
-    <div className="h-full w-full bg-slate-900 flex flex-col overflow-hidden font-sans">
-      
-      {/* Background Image Layer */}
-      <div className="absolute inset-x-0 top-0 h-[60%] overflow-hidden">
-        <img 
-          src={lesson.simulation?.images?.present || "https://images.unsplash.com/photo-1454165833767-02755157f86e?auto=format&fit=crop&w=800&q=80"} 
-          className="w-full h-full object-cover brightness-[0.4] scale-110 blur-sm animate-pulse" 
-          alt="Lesson Background"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-900" />
-      </div>
-
-      {/* Top Header */}
-      <header className="relative p-8 pt-14 flex items-center justify-between z-10">
-         <div className="flex flex-col">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-400 mb-1">
-              {showInteraction ? "Crucial Moment" : "The Story"}
-            </span>
-            <div className="flex gap-2">
-               {!showInteraction ? slides.map((_, i) => (
-                 <div key={i} className={`h-1.5 w-8 rounded-full transition-all duration-500 ${i === activeSlide ? 'bg-blue-500 scale-x-125' : 'bg-slate-700'}`} />
-               )) : (
-                 <div className="h-1.5 w-full bg-amber-500 rounded-full" />
-               )}
-            </div>
-         </div>
-         <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-xl shadow-inner">
-            {showInteraction ? "⚖️" : (slides[activeSlide]?.visual || lesson.icon)}
-         </div>
-      </header>
-
-      {/* Slide Content Overlay */}
-      <div className="relative flex-1 px-8 flex flex-col z-10 overflow-y-auto pt-10 pb-32">
-         {!showInteraction ? (
-           <div className="animate-in slide-in-from-bottom-8 fade-in duration-700 mt-auto">
-              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-blue-400 mb-2">
-                Part {activeSlide + 1}
-              </h2>
-              <h1 className="text-3xl font-black text-white italic tracking-tighter leading-tight drop-shadow-2xl">
-                {slides[activeSlide]?.text.split('(')[0]}
-              </h1>
-              <p className="text-slate-400 font-bold text-lg mt-4 leading-relaxed italic opacity-80">
-                {slides[activeSlide]?.text.split('(')[1]?.replace(')', '') || ""}
-              </p>
-           </div>
-         ) : (
-           <div className="animate-in zoom-in-95 fade-in duration-500">
-              <h2 className="text-sm font-black uppercase tracking-[0.3em] text-amber-400 mb-2">Taking Action</h2>
-              <h1 className="text-2xl font-black text-white leading-tight mb-8">
-                {interaction.question}
-              </h1>
-              
-              <div className="flex flex-col gap-4">
-                {interaction.options.map((opt) => (
-                  <button 
-                    key={opt.id}
-                    onClick={() => handleDecision(opt.id)}
-                    className={`w-full p-6 text-left rounded-3xl font-bold transition-all border-2 relative overflow-hidden ${selectedDecision === opt.id ? 'bg-amber-500 border-amber-300 text-white shadow-lg shadow-amber-500/20' : 'bg-white/5 border-white/20 text-white hover:bg-white/10'}`}
-                  >
-                    {opt.text}
-                    {selectedDecision === opt.id && (
-                       <div className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
-                         ✓
-                       </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {selectedOption && (
-                <div className="mt-8 p-6 bg-blue-600/20 border border-blue-500/30 rounded-3xl animate-in slide-in-from-top-4 duration-500">
-                   <p className="text-blue-300 font-bold italic text-sm text-center">
-                     "{selectedOption.foreshadowing}"
-                   </p>
-                </div>
-              )}
-           </div>
-         )}
-      </div>
-
-      {/* Fixed Bottom Navigation Container */}
-      <div className="absolute bottom-0 inset-x-0 p-8 pt-0 bg-gradient-to-t from-slate-900 via-slate-900/90 to-transparent z-20">
-         <div className="flex gap-4 w-full">
-            {!selectedDecision ? (
-              <>
-                <button 
-                  onClick={handlePrev}
-                  className={`flex-1 py-5 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-[2rem] font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all ${activeSlide === 0 && !showInteraction ? 'opacity-0 pointer-events-none' : ''}`}
-                >
-                  Back
-                </button>
-                {!showInteraction && (
-                  <button 
-                    onClick={handleNext}
-                    className="flex-[2] py-5 bg-blue-600 border border-blue-400 text-white rounded-[2rem] font-black uppercase tracking-widest text-[10px] shadow-2xl shadow-blue-500/20 active:scale-95 transition-all"
-                  >
-                    Next ➔
-                  </button>
-                )}
-              </>
-            ) : (
-              <button 
-                onClick={() => {
-                  console.log("Navigating to Map Demo...");
-                  onStartDemo();
-                }}
-                className="w-full py-8 bg-gradient-to-r from-amber-500 to-orange-600 border border-white/20 text-white rounded-[2.5rem] font-black text-2xl animate-pulse shadow-[0_20px_60px_-15px_rgba(245,158,11,0.6)] active:scale-95 transition-all"
-              >
-                 मैप पर आजमाएं (Try on Map) ➔
-              </button>
-            )}
-         </div>
-      </div>
-
-    </div>
-  );
+  return null;
 }

@@ -2,68 +2,111 @@ const learningModules = [
   {
     id: "seed_trap",
     icon: "🌾",
-    title: "उर्वरक का जाल (The Soil Trap)",
+    title: "Seed Trap – Sasta Aaj, Mehenga Kal",
     difficulty: "Easy",
     rewardType: "arthaScore",
     rewardAmount: 20,
-    slides: [
-      { 
-        visual: "🚜", 
-        text: "खेती का नया सीजन शुरू हो गया है! अच्छी फसल के लिए आपको सही बीज और खाद का चुनाव करना होगा। (New crop season! You must pick the right seeds and fertilizer for a good harvest.)" 
+    // 3-screen story: action-first, visual-first
+    screens: [
+      {
+        id: "intro",
+        type: "action", // action cards, not text
+        visual: "🌾",
+        voiceover: "Naya season shuru ho gaya hai… beej aur khaad leni hai.",
+        title: "नया सीज़न शुरू! (New Season Begins!)",
+        subtitle: "अपनी पहली चॉइस करो (Make your first choice)",
+        actions: [
+          {
+            id: "urea",
+            icon: "💊",
+            label: "सस्ता यूरिया खरीदो",
+            sublabel: "Buy Cheap Urea",
+            cost: "₹800",
+            color: "amber",
+            tag: "सस्ता / Cheap"
+          },
+          {
+            id: "hybrid",
+            icon: "🌱",
+            label: "हाइब्रिड बीज खरीदो",
+            sublabel: "Buy Hybrid Seeds",
+            cost: "₹2,000",
+            color: "green",
+            tag: "समझदारी / Smart"
+          }
+        ]
       },
-      { 
-        visual: "💰", 
-        text: "दुकानदार कहता है: 'सस्ता यूरिया ले जाओ, फसल रातों-रात बढ़ जाएगी!' यह सुनने में बहुत अच्छा लगता है। (Shopkeeper says: 'Take cheap urea, your crop will grow overnight!' Sounds tempting.)" 
+      {
+        id: "warning",
+        type: "story",
+        visual: "⚠️",
+        voiceover: "Sasta urea jaldi faida deta hai… par mitti ko nuksaan pahunchata hai.",
+        title: "एक ज़रूरी बात…",
+        subtitle: "(Something important...)",
+        message: "सस्ता यूरिया पहले अच्छी फसल देता है। लेकिन मिट्टी को धीरे-धीरे कमज़ोर करता है।",
+        messageEn: "Cheap urea gives good crop first time. But it slowly damages the soil.",
+        highlight: "mitti_weak"
       },
-      { 
-        visual: "⚠️", 
-        text: "लेकिन सावधान! ज़्यादा यूरिया से शुरू में फसल अच्छी दिखती है, पर धीरे-धीरे ज़मीन बंजर हो जाती है। (But wait! Excess urea makes crops look good at first, but damages soil over time.)" 
+      {
+        id: "bridge",
+        type: "bridge",
+        visual: "🗺️",
+        voiceover: "Ab isse apne gaon mein try karo.",
+        title: "अब इसे अपने गाँव में आज़माओ",
+        subtitle: "Now try this in your village",
+        cta: "🌾 Try on Map"
       }
     ],
-    interaction: {
-      type: "decision",
-      question: "आप अपने खेत को कैसे तैयार करेंगे? (How will you prepare your farm?)",
-      options: [
-        {
-          id: "cheap",
-          text: "सस्ता रास्ता: सामान्य बीज + ज़्यादा यूरिया (Cheap path: Basic seeds + Excess urea)",
-          foreshadowing: "शायद शुरू में पैसा बचे, पर मिट्टी का क्या? (Money saved now, but what about the soil?)",
-          isGood: false
-        },
-        {
-          id: "smart",
-          text: "समझदार रास्ता: हाइब्रिड बीज + संतुलित खाद (Smart path: Hybrid seeds + Balanced fertilizer)",
-          foreshadowing: "लंबी अवधि के फायदे के लिए सही निवेश। (A right investment for long-term gains.)",
-          isGood: true
-        }
-      ]
-    },
     simulation: {
       steps: ["seed_shop", "fertilizer"],
+      highlights: ["seed_shop", "fertilizer", "farm"],
+      hint: "Yahan se apni fasal ki tayari karo",
       outcomes: {
         good: {
-          title: "शानदार फसल! (Great Harvest!)",
-          description: "हाइब्रिड बीज और संतुलित खाद से मिट्टी भी स्वस्थ रही और मुनाफा भी हुआ। (Hybrid seeds and balanced fertilizer kept soil healthy and maximized profit.)",
+          title: "शानदार फसल! 🌾",
+          titleEn: "Great Harvest!",
+          message: "Aapki zameen mazboot bani rahegi",
+          messageHi: "आपकी ज़मीन मज़बूत बनी रहेगी",
           arthaChange: 15,
-          impact: "Crop loss: 0%, Income: +₹25,000",
+          color: "green",
           visual: "lush_field",
-          color: "green"
+          losses: null,
+          gains: [
+            { icon: "🌾", label: "Fasal", value: "+40% Yield" },
+            { icon: "💧", label: "Soil", value: "Healthy" },
+            { icon: "💰", label: "Income", value: "+₹25,000" }
+          ]
         },
         mid: {
-          title: "औसत नतीजा (Average Result)",
-          description: "चुनाव ठीक था, पर बेहतर किया जा सकता था। मिट्टी अभी भी ठीक है। (Fair choices, but could be better. Soil is still okay.)",
+          title: "Theek-Thaak Fasal",
+          titleEn: "Average Result",
+          message: "Kuch faida, kuch nuksaan",
+          messageHi: "कुछ फायदा, कुछ नुकसान",
           arthaChange: 5,
-          impact: "Crop loss: 10%, Income: +₹10,000",
+          color: "yellow",
           visual: "fair_field",
-          color: "yellow"
+          losses: [
+            { icon: "🌾", label: "Crop Loss", value: "10%" },
+          ],
+          gains: [
+            { icon: "💰", label: "Income", value: "+₹10,000" }
+          ]
         },
         bad: {
-          title: "मिट्टी बंजर! (Soil Damaged!)",
-          description: "ज़्यादा यूरिया ने ज़मीन की जान निकाल दी। अगली बार पैदावार बहुत कम होगी। (Excess urea drained the soil. Future yields will be very low.)",
+          title: "Seed Trap! ⚠️",
+          titleEn: "Soil Damaged",
+          message: "Zyada urea ne mitti ko kamzor kar diya",
+          messageHi: "ज़्यादा यूरिया ने मिट्टी को कमज़ोर कर दिया",
           arthaChange: -20,
-          impact: "Crop loss: 40% (Next season), Income loss: -₹15,000",
+          color: "red",
           visual: "seized_field",
-          color: "red"
+          totalLoss: "₹10,000",
+          losses: [
+            { icon: "🌾", label: "Fasal / Crop Loss", value: "40%" },
+            { icon: "💧", label: "Mitti / Soil Fertility", value: "-60%" },
+            { icon: "💰", label: "Agle Season / Next Income", value: "-₹10,000" }
+          ],
+          gains: null
         }
       },
       images: {
