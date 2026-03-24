@@ -11,7 +11,7 @@ import CrisisModal from './CrisisModal';
 import learningModules from '../data/learningModules';
 import DecisionModal from './DecisionModal';
 import OutcomeOverlay from './OutcomeOverlay';
-import ArthaScoreDetails from './ArthaScoreDetails';
+import SeedTrapScenario from './SeedTrapScenario';
 console.log("SimulationMap: Initializing...");
 
 const MAP_SIZE = 800;
@@ -68,7 +68,7 @@ const MapMarkers = ({ activeLocation, setActiveLocation, language, activeTourSte
   );
 };
 
-export default function SimulationMap({ onOpenLedger, profile, activeModuleId, onChoiceMade }) {
+export default function SimulationMap({ onOpenLedger, profile, activeModuleId, onChoiceMade, onModuleComplete, onBack }) {
   const { 
     walletBalance, 
     bankDebt, 
@@ -91,10 +91,9 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
   const [showSchemes, setShowSchemes] = useState(false);
   const [showScoreDetails, setShowScoreDetails] = useState(false);
   
-  // Simulation Step Tracking
-  const [simStep, setSimStep] = useState('seed'); // 'seed' | 'fertilizer' | 'transition' | 'harvest'
-  const [simChoices, setSimChoices] = useState({ seed: null, fertilizer: null });
-  const [timeTransition, setTimeTransition] = useState(null); // null | 'week2' | 'month1' | 'harvest'
+  // Scenario state (replaces old simStep/simChoices/timeTransition for modules)
+  const [scenarioHighlights, setScenarioHighlights] = useState([]);
+  const [mapTint, setMapTint] = useState(null);
   const mapScrollRef = useRef(null);
 
   useEffect(() => {
@@ -257,6 +256,12 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
           
           {/* Top Info Bar */}
           <div className="flex flex-row items-center justify-between">
+             {/* Back to Hub button — only when in module mode */}
+             {onBack && (
+               <button onClick={onBack} className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 text-slate-600 font-black text-xs active:scale-95 transition-all">
+                 ← Hub
+               </button>
+             )}
              <div className="flex items-center gap-3 bg-slate-100 backdrop-blur-md px-3 py-1.5 rounded-xl border border-slate-200">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500 flex items-center justify-center text-sm">👴</div>
                 <span className="font-black text-sm text-slate-800 tracking-tight">Artha Chacha</span>
@@ -331,34 +336,24 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
              setActiveLocation={setActiveLocation} 
              language={language}
              activeTourStep={activeTourStep}
-              highlights={
-                activeModuleId === 'seed_trap'
-                  ? (simStep === 'seed' ? ['seed_shop'] : simStep === 'fertilizer' ? ['fertilizer'] : simStep === 'farm' ? ['farm'] : [])
-                  : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])
-              }
+             highlights={activeModuleId === 'seed_trap' ? scenarioHighlights : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])}
            />
+
+           {/* Map tint overlay for scenario outcomes */}
+           {mapTint && (
+             <div className="absolute inset-0 z-[20] pointer-events-none transition-all duration-1000" style={{ background: mapTint }} />
+           )}
          </div>
 
-          {/* Timeline Transition Overlay */}
-          {timeTransition && (
-            <div className="absolute inset-0 z-[5000] bg-amber-950/90 backdrop-blur-md flex flex-col items-center justify-center gap-6 p-8">
-              <div className="text-8xl animate-bounce">
-                {timeTransition === 'week2' ? '🌱' : timeTransition === 'month1' ? '🌿' : '🌾'}
-              </div>
-              <div className="text-center">
-                <p className="text-amber-400 font-black uppercase tracking-[0.4em] text-xs mb-2">समय बीत रहा है... / Time Passing...</p>
-                <h1 className="text-5xl font-black text-white italic tracking-tighter">
-                  {timeTransition === 'week2' ? 'Week 2' : timeTransition === 'month1' ? 'Month 1' : 'Harvest!'}
-                </h1>
-              </div>
-              <div className="flex gap-3 mt-2">
-                {['week2','month1','harvest'].map((s) => (
-                  <div key={s} className={`h-2 w-12 rounded-full transition-all duration-500 ${s === timeTransition ? 'bg-amber-400 scale-x-125' : 'bg-white/20'}`} />
-                ))}
-              </div>
-            </div>
-          )}
-      </div>
+         {/* Seed Trap Scenario — renders floating cards INSIDE the map area */}
+         {activeModuleId === 'seed_trap' && (
+           <SeedTrapScenario
+             onComplete={() => onModuleComplete?.()}
+             onHighlightsChange={setScenarioHighlights}
+             onMapTintChange={setMapTint}
+           />
+         )}
+       </div>
 
       {/* ── BOLO ENGINE FIXED AT BOTTOM ── */}
       <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-500 ${activeTourStep === 3 ? 'z-[600]' : 'z-[1000]'}`}>
