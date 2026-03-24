@@ -16,7 +16,7 @@ export default function ProfileSelector({ language, onSelect }) {
     {
       id: 'farmer',
       icon: '🚜',
-      labels: { hi: 'शेती', mr: 'शेती', en: 'Farming', gu: 'ખેતી', bh: 'खेती', bn: 'কৃষি', te: 'వ్యవసాయం', ta: 'விவசாயம்', kn: 'ಕೃಷಿ' },
+      labels: { hi: 'खेती', mr: 'शेती', en: 'Farming', gu: 'ખેતી', bh: 'खेती', bn: 'কৃষি', te: 'వ్యవసాయం', ta: 'விவசாயம்', kn: 'ಕೃಷಿ' },
       bg: '#d1fae5',   // light green
       iconBg: '#a7f3d0',
     },
@@ -30,7 +30,7 @@ export default function ProfileSelector({ language, onSelect }) {
     {
       id: 'labour',
       icon: '🪓',
-      labels: { hi: 'मजुरी', mr: 'मजुरी', en: 'Labour', gu: 'મજૂરી', bh: 'मजदूरी', bn: 'শ্রম', te: 'కూలి', ta: 'கூலி', kn: 'ಕೂಲಿ' },
+      labels: { hi: 'मजदूरी', mr: 'मजुरी', en: 'Labour', gu: 'મજૂરી', bh: 'मजदूरी', bn: 'শ্রম', te: 'కూలి', ta: 'கூலி', kn: 'ಕೂಲಿ' },
       bg: '#fed7aa',   // light orange
       iconBg: '#fdba74',
     },
@@ -48,12 +48,12 @@ export default function ProfileSelector({ language, onSelect }) {
   return (
     <div className="w-full h-full bg-white flex flex-col overflow-hidden" style={{ fontFamily: 'sans-serif' }}>
       
-      {/* Header */}
-      <div className="flex flex-col items-center pt-12 pb-8 px-6 text-center">
-        <h1 className="text-2xl font-extrabold text-slate-800 mb-1 leading-tight">
+      {/* Header - Compacted */}
+      <div className="flex flex-col items-center pt-8 pb-6 px-6 text-center">
+        <h1 className="text-xl font-extrabold text-slate-800 mb-0.5 leading-tight">
           {t.main}
         </h1>
-        <p className="text-sm text-slate-500 font-medium">{t.sub}</p>
+        <p className="text-xs text-slate-500 font-bold">{t.sub}</p>
       </div>
 
       {/* 2×2 Profile Cards */}

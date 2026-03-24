@@ -16,8 +16,8 @@ const SETUP_T = {
     q1: 'प्रश्न 1: आपके पास कितनी जमीन है?',
     land0: 'कुछ नहीं', land1: '2 हेक्टेयर से कम', land2: '2 हेक्टेयर से अधिक',
     q2: 'प्रश्न 2: आपका राशन कार्ड प्रकार?',
-    ration1: 'BPL/अंत्योदय', ration2: 'सामान्य (General)',
-    start: 'सिमुलेशन शुरू करें'
+    ration1: 'बीपीएल / अंत्योदय', ration2: 'सामान्य',
+    start: 'खेल शुरू करें'
   },
   mr: {
     title: 'तुमची माहिती',
@@ -25,7 +25,7 @@ const SETUP_T = {
     q1: 'प्रश्न १: तुमच्याकडे किती जमीन आहे?',
     land0: 'काहीही नाही', land1: '२ हेक्टरपेक्षा कमी', land2: '२ हेक्टरपेक्षा जास्त',
     q2: 'प्रश्न २: तुमचा रेशनकार्ड प्रकार?',
-    ration1: 'BPL/अंत्योदय', ration2: 'सामान्य (General)',
+    ration1: 'बीपीएल / अंत्योदय', ration2: 'सामान्य',
     start: 'सुरू करा'
   },
   gu: {
@@ -34,7 +34,7 @@ const SETUP_T = {
     q1: 'પ્રશ્ન 1: તમારી પાસે કેટલી જમીન છે?',
     land0: 'કંઈ નહીં', land1: '2 હેક્ટરથી ઓછી', land2: '2 હેક્ટરથી વધુ',
     q2: 'પ્રશ્ન 2: તમારો રેશન કાર્ડ પ્રકાર?',
-    ration1: 'BPL/અંત્યોદય', ration2: 'સામાન્ય (General)',
+    ration1: 'બીપીએલ / અંત્યોદય', ration2: 'સામાન્ય',
     start: 'શરૂ કરો'
   }
 };
@@ -62,28 +62,28 @@ export default function ProfileSetup({ language = 'hi', onProfileComplete }) {
   ];
 
   return (
-    <div className="w-full h-full bg-white flex flex-col p-5 overflow-hidden" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-      <div className="pt-6 mb-4 text-center">
-        <h1 className="text-2xl font-black text-slate-800 tracking-tight mb-1">
+    <div className="w-full h-full bg-white flex flex-col p-4 overflow-hidden" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+      <div className="pt-6 mb-3 text-center">
+        <h1 className="text-xl font-black text-slate-800 tracking-tight mb-0.5">
           {t.title}
         </h1>
-        <p className="text-slate-500 font-bold text-[13px]">
+        <p className="text-slate-500 font-bold text-[11px] leading-tight max-w-[240px] mx-auto">
           {t.subtitle}
         </p>
       </div>
 
-      <div className="space-y-5 flex-1 overflow-y-auto pr-1">
+      <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-1">
         {/* Q1: Land */}
         <div>
-          <h2 className="text-xs font-black text-green-600 uppercase tracking-widest mb-3">
+          <h2 className="text-[10px] font-black text-green-600 uppercase tracking-widest mb-2">
             {t.q1}
           </h2>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2">
             {LAND_OPTS.map((opt, idx) => (
               <button
                 key={opt.val}
                 onClick={() => handleSelect('land', opt.val)}
-                className={`py-3.5 rounded-xl text-base font-bold border-2 transition-all ${idx === 2 ? 'col-span-2' : ''} ${profile.land === opt.val ? 'bg-green-100 border-green-500 text-green-800 shadow-md' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                className={`py-3 rounded-xl text-sm font-black border-2 transition-all ${profile.land === opt.val ? 'bg-green-50 border-green-500 text-green-800 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600'}`}
               >
                 {opt.label}
               </button>
@@ -93,7 +93,7 @@ export default function ProfileSetup({ language = 'hi', onProfileComplete }) {
 
         {/* Q2: Income */}
         <div>
-          <h2 className="text-xs font-black text-purple-600 uppercase tracking-widest mb-3">
+          <h2 className="text-[10px] font-black text-purple-600 uppercase tracking-widest mb-2">
             {t.q2}
           </h2>
           <div className="grid grid-cols-1 gap-2">
@@ -101,7 +101,7 @@ export default function ProfileSetup({ language = 'hi', onProfileComplete }) {
               <button
                 key={opt.val}
                 onClick={() => handleSelect('income', opt.val)}
-                className={`py-3.5 rounded-xl text-base font-bold border-2 transition-all ${profile.income === opt.val ? 'bg-purple-100 border-purple-500 text-purple-800 shadow-md' : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'}`}
+                className={`py-3 rounded-xl text-sm font-black border-2 transition-all ${profile.income === opt.val ? 'bg-purple-50 border-purple-500 text-purple-800 shadow-sm' : 'bg-slate-50 border-slate-200 text-slate-600'}`}
               >
                 {opt.label}
               </button>
@@ -110,11 +110,11 @@ export default function ProfileSetup({ language = 'hi', onProfileComplete }) {
         </div>
       </div>
 
-      <div className="mt-4 pb-4">
+      <div className="mt-3 pb-4">
         <button
           onClick={() => onProfileComplete(profile)}
           disabled={!isComplete}
-          className={`w-full py-4 rounded-2xl text-lg font-black transition-all ${isComplete ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 active:scale-95' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
+          className={`w-full py-4 rounded-xl text-sm font-black transition-all uppercase tracking-widest ${isComplete ? 'bg-blue-600 text-white shadow-lg active:scale-95' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}`}
         >
           {t.start}
         </button>

@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { useFinancials } from '../context/FinancialContext.jsx';
 import LanguageSelector from './LanguageSelector';
 import ProfileSelector from './ProfileSelector';
 import SimulationMap from './SimulationMap';
-import { useFinancials } from '../context/FinancialContext.jsx';
 import GyanKendra from './GyanKendra';
 import InsightScreen from './InsightScreen';
+import ProfileSetup from './ProfileSetup';
 
 export default function GameController() {
   const [onboardingScreen, setOnboardingScreen] = useState('language');
@@ -26,7 +27,16 @@ export default function GameController() {
 
   const handleProfileSelect = (profile) => {
     setSelectedProfile(profile);
-    setFarmerProfile({ profession: profile, landSize: 2, incomeGroup: 'medium', name: 'Farmer' });
+    setOnboardingScreen('setup');
+  };
+
+  const handleProfileComplete = (setupData) => {
+    setFarmerProfile({ 
+      profession: selectedProfile, 
+      land: setupData.land, 
+      income: setupData.income, 
+      name: 'Farmer' 
+    });
     setCurrentView('GYAN_KENDRA');
   };
 
@@ -43,9 +53,9 @@ export default function GameController() {
   };
 
   return (
-    <div className="h-screen w-full bg-slate-100 flex items-center justify-center p-4">
+    <div className="h-screen w-full bg-slate-900 flex items-center justify-center overflow-hidden font-sans">
       {/* ── MOBILE PHONE FRAME ── */}
-      <div className="relative w-full h-full max-w-[430px] max-h-[850px] bg-white rounded-[3rem] shadow-2xl overflow-hidden border-[8px] border-slate-900 ring-4 ring-slate-800">
+      <div className="relative w-full h-full max-w-[min(430px,100vw)] max-h-[100dvh] bg-white shadow-2xl overflow-hidden sm:rounded-[3rem] sm:border-[8px] border-slate-900 transition-all duration-500">
         
         {/* Notch */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-slate-900 rounded-b-2xl z-[1000]" />
@@ -53,11 +63,11 @@ export default function GameController() {
         {/* ── SCREEN CONTENT ── */}
         <div className="h-full w-full relative overflow-hidden bg-white">
 
-          {/* 1. ONBOARDING */}
           {currentView === 'ONBOARDING' && (
             <>
               {onboardingScreen === 'language' && <LanguageSelector onSelect={handleLanguageSelect} />}
               {onboardingScreen === 'profile' && <ProfileSelector language={language} onSelect={handleProfileSelect} />}
+              {onboardingScreen === 'setup' && <ProfileSetup language={language} onProfileComplete={handleProfileComplete} />}
             </>
           )}
 

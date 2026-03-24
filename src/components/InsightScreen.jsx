@@ -1,140 +1,156 @@
-import React from 'react';
+import React, { useState } from 'react';
+import YojanaConnect from './YojanaConnect';
 
 /**
  * InsightScreen — "Samajh Aaya?" 
  * Full screen that visually explains what happened and what should have been done.
- * Opens when user clicks "Samajhna chahte ho?" from the outcome card.
+ * Handles both "Seed Trap" and "Loan Trap" modules.
  */
 export default function InsightScreen({ outcome, onDone }) {
+  const [showYojana, setShowYojana] = useState(false);
+  const isLoanTrap = outcome?.moduleId === 'loan_trap';
   const isBad = outcome?.color === 'red';
+  const isGood = outcome?.color === 'green';
 
-  const userChoice = isBad
-    ? { icon: '💊', label: 'Aapka Faisla', name: 'Excess Urea', result: 'Mitti kamzor ho gayi', bg: 'bg-red-50', border: 'border-red-200', badge: 'bg-red-500', text: 'text-red-700', emoji: '⚠️' }
-    : { icon: '🌱', label: 'Aapka Faisla', name: 'Balanced Fertilizer', result: 'Mitti mazboot rahi!', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700', emoji: '✅' };
+  // ── SEED TRAP DATA ──────────────────────────────────────────
+  const seedTrapData = {
+    user: isBad
+      ? { icon: '💊', label: 'आपका फैसला', name: 'ज़्यादा यूरिया', result: 'मिट्टी कमज़ोर हुई', bg: 'bg-red-50', border: 'border-red-200', badge: 'bg-red-500', text: 'text-red-700', emoji: '⚠️' }
+      : { icon: '🌱', label: 'आपका फैसला', name: 'संतुलित खाद', result: 'मिट्टी मजबूत रही!', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700', emoji: '✅' },
+    better: isBad
+      ? { icon: '🌿', label: 'बेहतर तरीका', name: 'संतुलित खाद', result: 'मिट्टी मजबूत रहेगी', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700' }
+      : { icon: '🏆', label: 'सही फैसला!', name: 'हाइब्रिड + संतुलित', result: 'हर सीजन मजबूत फसल', bg: 'bg-emerald-50', border: 'border-emerald-200', badge: 'bg-emerald-500', text: 'text-emerald-700' },
+    explanation: isBad
+      ? ['ज़्यादा यूरिया मिट्टी की ताकत कम कर देता है।', 'इससे आने वाली फसल पर बुरा असर पड़ता है।']
+      : ['हाइब्रिड बीज और संतुलित खाद — यही सही जोड़ है।', 'मिट्टी भी ठीक, फसल भी अच्छी, आय भी ज़्यादा।'],
+    arthaChacha: isBad
+      ? '"जल्दी फायदा देखना आसान है... पर ज़मीन को समझना ज़रूरी है।"'
+      : '"जो धीरे बोया, वह गहरे उगता है। तू सही रास्ते पर है।"',
+    flow: isBad 
+      ? ['सस्ता यूरिया', 'तेज़ बढ़त', 'मिट्टी क्षति', 'नुकसान']
+      : ['हाइब्रिड बीज', 'मजबूत जड़ें', 'स्वस्थ मिट्टी', 'बंपर पैदावार']
+  };
 
-  const betterChoice = isBad
-    ? { icon: '🌿', label: 'Behtar Tarika', name: 'Balanced Fertilizer', result: 'Mitti mazboot rahegi', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700' }
-    : { icon: '🏆', label: 'Sahi Faisla!', name: 'Hybrid + Balanced', result: 'Har season strong fasal', bg: 'bg-emerald-50', border: 'border-emerald-200', badge: 'bg-emerald-500', text: 'text-emerald-700' };
+  // ── LOAN TRAP DATA ──────────────────────────────────────────
+  const loanTrapData = {
+    user: isBad
+      ? { icon: '💰', label: 'आपका फैसला', name: 'साहूकार कर्ज', result: 'कर्ज जाल (₹8,000)', bg: 'bg-red-50', border: 'border-red-200', badge: 'bg-red-500', text: 'text-red-700', emoji: '⚠️' }
+      : isGood 
+        ? { icon: '🏛️', label: 'आपका फैसला', name: 'सरकारी योजना', result: '₹5,000 बचाए!', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700', emoji: '✅' }
+        : { icon: '🏦', label: 'आपका फैसला', name: 'बैंक लोन', result: 'सस्ता ब्याज (₹5,200)', bg: 'bg-amber-50', border: 'border-amber-200', badge: 'bg-amber-500', text: 'text-amber-700', emoji: '📊' },
+    better: isGood
+      ? { icon: '🏆', label: 'सही फैसला!', name: 'सरकारी योजना', result: 'योजना का लाभ!', bg: 'bg-emerald-50', border: 'border-emerald-200', badge: 'bg-emerald-500', text: 'text-emerald-700' }
+      : { icon: '🏛️', label: 'बेहतर तरीका', name: 'पंचायत / बैंक', result: 'सुरक्षित और सस्ता', bg: 'bg-green-50', border: 'border-green-200', badge: 'bg-green-500', text: 'text-green-700' },
+    explanation: isBad
+      ? ['साहूकार का ब्याज बहुत ज़्यादा होता है।', '₹5,000 का कर्ज़ ₹8,000 बन जाता है।']
+      : isGood
+        ? ['आयुष्मान भारत से मुफ़्त इलाज मिलता है।', 'कर्ज़ लेने की ज़रूरत ही नहीं पड़ी!']
+        : ['बैंक से कर्ज़ लेना साहूकार से सस्ता है।', 'ब्याज दर कम होने से बोझ कम होता है।'],
+    arthaChacha: isBad
+      ? '"कर्ज़ लेना आसान है, पर उसे चुकाना नहीं। हमेशा सही जगह चुनिए।"'
+      : '"सरकारी योजनाएं हमारे लिए ही हैं। उनका उपयोग करना ही असली समझदारी है।"',
+    flow: isBad 
+      ? ['इमरजेंसी', 'साहूकार', 'ऊँचा ब्याज', 'कर्ज जाल']
+      : ['इमरजेंसी', 'पंचायत', 'सरकारी योजना', 'पैसे बचे!']
+  };
 
-  const explanation = isBad
-    ? [
-        'Zyada urea mitti ki taakat kam kar deta hai.',
-        'Isse aane wali fasal par bura asar padta hai.',
-      ]
-    : [
-        'Hybrid beej aur balanced khaad — yahi sahi combo hai.',
-        'Mitti bhi theek, fasal bhi achhi, income bhi zyada.',
-      ];
-
-  const arthaChacha = isBad
-    ? '"Jaldi faida dekhna asaan hai… par zameen ko samajhna zaroori hai."'
-    : '"Jo dheere boya, woh gehre ugta hai. Tu sahi raste par hai."';
+  const data = isLoanTrap ? loanTrapData : seedTrapData;
 
   return (
     <div className="h-full w-full flex flex-col bg-white font-sans overflow-hidden">
-
-      {/* Top Bar */}
-      <div className="flex-shrink-0 flex items-center justify-between px-5 pt-12 pb-4 bg-white border-b border-slate-100">
-        <button onClick={onDone} className="flex items-center gap-2 text-slate-500 font-black text-sm active:scale-95 transition-all">
-          <span className="text-lg">←</span> Wapas
+      {/* Top Bar - Compact */}
+      <div className="flex-shrink-0 flex items-center justify-between px-4 pt-8 pb-3 bg-white border-b border-slate-100">
+        <button onClick={onDone} className="flex items-center gap-1.5 text-slate-500 font-black text-xs active:scale-95 transition-all">
+          <span className="text-base">←</span> 
         </button>
         <div className="text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-indigo-400">Insight Mode</p>
-          <h1 className="font-black text-lg text-slate-900 leading-tight">Samajh Aaya? 💡</h1>
+          <p className="text-[8px] font-black uppercase tracking-widest text-indigo-400 mb-0.5">Insight Mode</p>
+          <h1 className="font-black text-base text-slate-900 leading-tight">क्या समझ आया? 💡</h1>
         </div>
-        <div className="w-14" /> {/* spacer */}
+        <div className="w-8" />
       </div>
 
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 py-5 flex flex-col gap-5">
-
-        {/* === VISUAL COMPARISON (most important) === */}
+      {/* Scrollable content - Tighter */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-4 custom-scrollbar">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 text-center mb-3">Kya hua vs Kya hona chahiye tha</p>
-          <div className="grid grid-cols-2 gap-3">
-
-            {/* Left: User's choice */}
-            <div className={`rounded-3xl border-2 p-4 flex flex-col items-center gap-2 ${userChoice.bg} ${userChoice.border}`}>
-              <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full text-white ${userChoice.badge}`}>
-                {userChoice.label}
+          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 text-center mb-2.5">तुलना (Comparison)</p>
+          <div className="grid grid-cols-2 gap-2.5">
+            {/* Left Card */}
+            <div className={`rounded-2xl border p-3 flex flex-col items-center gap-1.5 ${data.user.bg} ${data.user.border}`}>
+              <span className={`text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-lg text-white ${data.user.badge}`}>
+                {data.user.label}
               </span>
-              <span className="text-5xl mt-1">{userChoice.icon}</span>
-              <p className={`font-black text-sm text-center ${userChoice.text}`}>{userChoice.name}</p>
+              <span className="text-4xl mt-0.5">{data.user.icon}</span>
+              <p className={`font-black text-[11px] text-center leading-tight ${data.user.text}`}>{data.user.name}</p>
               <div className="flex items-center gap-1">
-                <span className="text-lg">{userChoice.emoji}</span>
-                <p className="text-slate-600 font-bold text-[11px] text-center leading-tight">{userChoice.result}</p>
+                <span className="text-base">{data.user.emoji}</span>
+                <p className="text-slate-600 font-bold text-[9px] text-center leading-tight">{data.user.result}</p>
               </div>
             </div>
 
-            {/* Right: Better choice */}
-            <div className={`rounded-3xl border-2 p-4 flex flex-col items-center gap-2 ${betterChoice.bg} ${betterChoice.border}`}>
-              <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded-full text-white ${betterChoice.badge}`}>
-                {betterChoice.label}
+            {/* Right Card */}
+            <div className={`rounded-2xl border p-3 flex flex-col items-center gap-1.5 ${data.better.bg} ${data.better.border}`}>
+              <span className={`text-[7px] font-black uppercase tracking-widest px-1.5 py-0.5 rounded-lg text-white ${data.better.badge}`}>
+                {data.better.label}
               </span>
-              <span className="text-5xl mt-1">{betterChoice.icon}</span>
-              <p className={`font-black text-sm text-center ${betterChoice.text}`}>{betterChoice.name}</p>
+              <span className="text-4xl mt-0.5">{data.better.icon}</span>
+              <p className={`font-black text-[11px] text-center leading-tight ${data.better.text}`}>{data.better.name}</p>
               <div className="flex items-center gap-1">
-                <span className="text-lg">✅</span>
-                <p className="text-slate-600 font-bold text-[11px] text-center leading-tight">{betterChoice.result}</p>
+                <span className="text-base">✅</span>
+                <p className="text-slate-600 font-bold text-[9px] text-center leading-tight">{data.better.result}</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* === SIMPLE EXPLANATION === */}
-        <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5">
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-3">Kyun Hua Aisa?</p>
-          {explanation.map((line, i) => (
-            <div key={i} className="flex items-start gap-3 mb-2">
-              <span className="text-indigo-400 font-black text-sm flex-shrink-0">{i + 1}.</span>
-              <p className="text-slate-700 font-bold text-sm leading-relaxed">{line}</p>
+        {/* Explanation */}
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4">
+          <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-2.5">ऐसा क्यों हुआ?</p>
+          {data.explanation.map((line, i) => (
+            <div key={i} className="flex items-start gap-2.5 mb-1.5 last:mb-0">
+              <span className="text-indigo-500 font-black text-xs flex-shrink-0">{i + 1}.</span>
+              <p className="text-slate-700 font-bold text-[11px] leading-tight">{line}</p>
             </div>
           ))}
         </div>
 
-        {/* === ARTHA CHACHA === */}
-        <div className="bg-amber-50 border border-amber-200 rounded-3xl p-5 flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center text-2xl flex-shrink-0 border-2 border-amber-300">
-            👴
-          </div>
+        {/* Artha Chacha */}
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+          <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-xl flex-shrink-0 border-2 border-amber-300">👴</div>
           <div>
-            <p className="text-[9px] font-black uppercase tracking-widest text-amber-500 mb-2">Artha Chacha</p>
-            <p className="text-amber-900 font-bold italic text-sm leading-relaxed">{arthaChacha}</p>
+            <p className="text-[8px] font-black uppercase tracking-widest text-amber-500 mb-1">अर्था चाचा</p>
+            <p className="text-amber-900 font-bold italic text-[11px] leading-tight">{data.arthaChacha}</p>
           </div>
         </div>
 
-        {/* Visual flow diagram */}
-        {isBad && (
-          <div className="bg-slate-900 rounded-3xl p-5">
-            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Kyun Nuksaan Hota Hai</p>
-            <div className="flex items-center gap-2 flex-wrap">
-              {['Sasta Urea', '→ Jaldi Growth', '→ Mitti damage', '→ Agli season −40%'].map((s, i) => (
-                <span key={i} className={`px-3 py-1 rounded-full text-xs font-black ${i === 0 ? 'bg-amber-500 text-white' : i === 3 ? 'bg-red-500 text-white' : 'bg-white/10 text-white/70'}`}>{s}</span>
-              ))}
-            </div>
+        {/* Flow Diagram */}
+        <div className="bg-slate-900 rounded-2xl p-4">
+          <p className="text-[8px] font-black uppercase tracking-widest text-slate-400 mb-3">यात्रा (The Journey)</p>
+          <div className="flex items-center gap-1.5 flex-wrap">
+            {data.flow.map((s, i) => (
+                <span key={i} className={`px-2 py-1 rounded-lg text-[9px] font-black ${i === 0 ? 'bg-amber-500 text-white' : i === 3 ? (isBad ? 'bg-red-500 text-white' : 'bg-green-500 text-white') : 'bg-white/10 text-white/70'}`}>{s}</span>
+            ))}
           </div>
-        )}
-        {!isBad && (
-          <div className="bg-slate-900 rounded-3xl p-5">
-            <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-4">Kyun Faida Hota Hai</p>
-            <div className="flex items-center gap-2 flex-wrap">
-              {['Hybrid + Balanced', '→ Strong roots', '→ Healthy soil', '→ +40% every season'].map((s, i) => (
-                <span key={i} className={`px-3 py-1 rounded-full text-xs font-black ${i === 0 ? 'bg-green-500 text-white' : i === 3 ? 'bg-emerald-400 text-white' : 'bg-white/10 text-white/70'}`}>{s}</span>
-              ))}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
 
-      {/* Fixed Bottom CTA */}
-      <div className="flex-shrink-0 px-5 py-5 bg-white border-t border-slate-100">
-        <button
-          onClick={onDone}
-          className="w-full py-5 bg-indigo-600 text-white rounded-[2rem] font-black text-base shadow-lg shadow-indigo-200 active:scale-95 transition-all"
-        >
-          ✔ Samajh Gaya — Aage Bado
+      {/* Bottom Action */}
+      <div className="flex-shrink-0 px-4 py-4 bg-white border-t border-slate-100 flex flex-col gap-2.5">
+        {isLoanTrap && isGood && (
+          <button 
+            onClick={() => setShowYojana(true)}
+            className="w-full py-3 bg-emerald-50 border border-emerald-500 text-emerald-700 rounded-xl font-black text-sm active:scale-95 transition-all flex items-center justify-center gap-2 uppercase tracking-wide"
+          >
+            👉 असल ज़िंदगी में आवेदन करें
+          </button>
+        )}
+        <button onClick={onDone}
+          className="w-full py-3.5 bg-indigo-600 text-white rounded-xl font-black text-sm shadow-lg shadow-indigo-100 active:scale-95 transition-all uppercase tracking-widest">
+          समझ गया — आगे बढ़ें
         </button>
       </div>
+
+      {showYojana && <YojanaConnect onClose={() => setShowYojana(false)} />}
     </div>
   );
 }

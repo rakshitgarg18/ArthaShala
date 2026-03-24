@@ -116,6 +116,14 @@ const learningModules = [
         seized_field: "https://images.unsplash.com/photo-1516710404095-23136209ed9e?auto=format&fit=crop&w=800&q=80"
       }
     }
+  },
+  {
+    id: "loan_trap",
+    icon: "💰",
+    title: "Loan Trap – Karz Ka Faisla",
+    difficulty: "Medium",
+    rewardType: "arthaScore",
+    rewardAmount: 30
   }
 ];
 

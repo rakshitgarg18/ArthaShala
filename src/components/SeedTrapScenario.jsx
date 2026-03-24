@@ -10,62 +10,69 @@ import React, { useState, useEffect, useCallback } from 'react';
 const OUTCOMES = {
   good: {
     title: '🌱 Mitti mazboot hai!',
+    titleHi: '🌱 मिट्टी मजबूत है!',
     subtitle: 'Aapki zameen mazboot bani rahegi',
+    subtitleHi: 'आपकी जमीन उपजाऊ बनी रहेगी।',
     arthaChange: +15,
     color: 'green',
     mapTint: 'rgba(34,197,94,0.18)',
     totalLoss: null,
     lines: [
-      { icon: '🌾', label: 'Fasal', value: '+40% Yield' },
-      { icon: '💧', label: 'Soil Health', value: '✅ Strong' },
-      { icon: '💰', label: 'Income', value: '+₹25,000' },
+      { icon: '🌾', label: 'Yield', labelHi: 'पैदावार', value: '+40%' },
+      { icon: '💧', label: 'Soil Health', labelHi: 'मिट्टी', value: '✅' },
+      { icon: '💰', label: 'Income', labelHi: 'आय', value: '+₹25k' },
     ],
   },
   bad: {
     title: '⚠️ Mitti kamzor ho gayi',
+    titleHi: '⚠️ मिट्टी कमजोर हो गई',
     subtitle: 'Zyada urea ne mitti ko kamzor kar diya',
+    subtitleHi: 'ज्यादा यूरिया ने मिट्टी को नुकसान पहुँचाया।',
     arthaChange: -20,
     color: 'red',
     mapTint: 'rgba(239,68,68,0.15)',
     totalLoss: '₹10,000',
     lines: [
-      { icon: '🌾', label: 'Fasal / Crop Loss', value: '−40%' },
-      { icon: '💧', label: 'Mitti / Soil', value: '−60% fertility' },
-      { icon: '💰', label: 'Agle Season', value: '−₹10,000' },
+      { icon: '🌾', label: 'Crop Loss', labelHi: 'फसल नुकसान', value: '−40%' },
+      { icon: '💧', label: 'Soil Damage', labelHi: 'मिट्टी क्षति', value: 'High' },
+      { icon: '💰', label: 'Future Loss', labelHi: 'भविष्य नुकसान', value: '₹10k' },
     ],
   },
 };
 
 // ── FLOATING EVENT CARD ───────────────────────────────────────────
-function FloatingEventCard({ onDismiss }) {
+function FloatingEventCard({ onDismiss, language }) {
+  const isHi = language === 'hi';
   return (
-    <div className="absolute top-16 left-4 right-4 z-[3000] animate-in slide-in-from-top-4 fade-in duration-500">
-      <div className="bg-white rounded-[2rem] shadow-2xl border border-amber-100 overflow-hidden">
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-4 flex items-center gap-3">
-          <span className="text-3xl">🌾</span>
+    <div className="absolute top-14 left-2 right-2 z-[3000] animate-in slide-in-from-top-4 fade-in duration-500">
+      <div className="bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden">
+        <div className="bg-gradient-to-r from-amber-500 to-orange-500 px-3 py-2 flex items-center gap-2">
+          <span className="text-xl">🌾</span>
           <div>
-            <p className="text-white font-black text-sm">Season Started!</p>
-            <p className="text-amber-100 text-xs font-bold">Apni fasal ki tayari karo</p>
+            <p className="text-white font-black text-[10px] uppercase tracking-wider">
+              {isHi ? 'सीजन शुरू!' : 'Season Started!'}
+            </p>
+            <p className="text-amber-100 text-[9px] font-bold">
+              {isHi ? 'अपनी फसल की तैयारी करें' : 'Prepare your crops'}
+            </p>
           </div>
         </div>
-        <div className="px-5 py-4">
-          <div className="flex items-start gap-3 mb-4">
-            <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center text-xl flex-shrink-0">👴</div>
-            <div className="bg-amber-50 rounded-2xl rounded-tl-sm px-4 py-3 flex-1">
-              <p className="text-amber-900 font-bold text-sm italic leading-relaxed">
-                "Naya season shuru ho gaya… Seed Shop pe jao aur beej chuniye."
+        <div className="px-3 py-2.5">
+          <div className="flex items-start gap-2 mb-2">
+            <div className="w-7 h-7 rounded-full bg-amber-500 flex items-center justify-center text-sm flex-shrink-0">👴</div>
+            <div className="bg-amber-50 rounded-xl rounded-tl-sm px-2.5 py-1.5 flex-1">
+              <p className="text-amber-900 font-bold text-[10px] italic leading-tight">
+                {isHi 
+                  ? '"नया सीजन शुरू हो गया है... बीज की दुकान पर जाएं और सही बीज चुनें।"'
+                  : '"New season started... Go to Seed Shop and pick your seeds."'}
               </p>
             </div>
           </div>
-          <div className="flex gap-2 text-[10px] font-black text-slate-500 mb-4 flex-wrap">
-            <span className="px-3 py-1.5 bg-amber-100 border border-amber-300 rounded-full text-amber-800">🏪 1. Seed Shop</span>
-            <span className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-full">🧪 2. Fertilizer</span>
-          </div>
           <button
             onClick={onDismiss}
-            className="w-full py-3 bg-amber-500 text-white rounded-2xl font-black text-sm active:scale-95 transition-all"
+            className="w-full py-2 bg-amber-500 text-white rounded-xl font-black text-[10px] active:scale-95 transition-all uppercase tracking-widest"
           >
-            Samajh gaya — Chalo! ➔
+            {isHi ? 'चलो चलें ➔' : 'Let\'s Go ➔'}
           </button>
         </div>
       </div>
@@ -88,36 +95,36 @@ function BottomHint({ icon, text }) {
 // ── SEED SHOP PICKER ─────────────────────────────────────────────
 function SeedShopPicker({ onPick, onClose }) {
   return (
-    <div className="absolute inset-x-4 bottom-28 z-[4000] animate-in slide-in-from-bottom-8 fade-in duration-300">
-      <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-green-100">
-        <div className="bg-green-700 px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🌱</span>
+    <div className="absolute inset-x-3 bottom-24 z-[4000] animate-in slide-in-from-bottom-8 fade-in duration-300">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-green-100">
+        <div className="bg-green-700 px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🌱</span>
             <div>
-              <p className="text-white font-black text-sm">Seed Shop</p>
-              <p className="text-green-200 text-xs">Apne beej chuniye</p>
+              <p className="text-white font-black text-xs">Seed Shop</p>
+              <p className="text-green-200 text-[10px]">Apne beej chuniye</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-white/60 text-lg w-8 h-8 flex items-center justify-center">✕</button>
+          <button onClick={onClose} className="text-white/60 text-base w-6 h-6 flex items-center justify-center">✕</button>
         </div>
-        <div className="p-4 flex flex-col gap-3">
+        <div className="p-3 flex flex-col gap-2">
           <button onClick={() => onPick('basic')}
-            className="w-full p-4 bg-amber-50 border-2 border-amber-200 rounded-2xl flex items-center gap-4 active:scale-95 transition-all hover:border-amber-400">
-            <span className="text-3xl">🌿</span>
+            className="w-full p-3 bg-amber-50 border-2 border-amber-100 rounded-2xl flex items-center gap-3 active:scale-95 transition-all">
+            <span className="text-2xl">🌿</span>
             <div className="flex-1 text-left">
-              <p className="font-black text-slate-800">Basic Seeds</p>
-              <p className="text-slate-500 text-xs">Saamanya beej — sasta</p>
+              <p className="font-black text-slate-800 text-xs">Basic Seeds</p>
+              <p className="text-slate-500 text-[10px]">Saamanya beej</p>
             </div>
-            <span className="font-black text-amber-700 bg-amber-100 px-3 py-1 rounded-full text-sm">₹1,500</span>
+            <span className="font-black text-amber-700 bg-amber-100 px-2 py-1 rounded-lg text-[10px]">₹1,500</span>
           </button>
           <button onClick={() => onPick('hybrid')}
-            className="w-full p-4 bg-green-50 border-2 border-green-300 rounded-2xl flex items-center gap-4 active:scale-95 transition-all hover:border-green-500">
-            <span className="text-3xl">🌱</span>
+            className="w-full p-3 bg-green-50 border-2 border-green-200 rounded-2xl flex items-center gap-3 active:scale-95 transition-all">
+            <span className="text-2xl">🌱</span>
             <div className="flex-1 text-left">
-              <p className="font-black text-slate-800">Hybrid Seeds</p>
-              <p className="text-green-600 text-xs font-bold">Better yield, healthy soil</p>
+              <p className="font-black text-slate-800 text-xs">Hybrid Seeds</p>
+              <p className="text-green-600 text-[10px] font-bold">Better yield, healthy soil</p>
             </div>
-            <span className="font-black text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm">₹2,500</span>
+            <span className="font-black text-green-700 bg-green-100 px-2 py-1 rounded-lg text-[10px]">₹2,500</span>
           </button>
         </div>
       </div>
@@ -126,38 +133,49 @@ function SeedShopPicker({ onPick, onClose }) {
 }
 
 // ── FERTILIZER PICKER ─────────────────────────────────────────────
-function FertilizerPicker({ onPick, onClose }) {
+function FertilizerPicker({ onPick, onClose, language }) {
+  const isHi = language === 'hi';
   return (
-    <div className="absolute inset-x-4 bottom-28 z-[4000] animate-in slide-in-from-bottom-8 fade-in duration-300">
-      <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-blue-100">
-        <div className="bg-blue-700 px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🧪</span>
+    <div className="absolute inset-x-2 bottom-32 z-[4000] animate-in slide-in-from-bottom-8 fade-in duration-300">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-blue-100">
+        <div className="bg-blue-700 px-3 py-2 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="text-xl">🧪</span>
             <div>
-              <p className="text-white font-black text-sm">Fertilizer Shop</p>
-              <p className="text-blue-200 text-xs">Khaad chuniye</p>
+              <p className="text-white font-black text-[10px] uppercase tracking-tight">
+                {isHi ? 'खाद की दुकान (Fertilizers)' : 'Fertilizer Shop'}
+              </p>
+              <p className="text-blue-200 text-[9px] font-bold">{isHi ? 'सही खाद चुनें' : 'Choose Fertilizer'}</p>
             </div>
           </div>
-          <button onClick={onClose} className="text-white/60 text-lg w-8 h-8 flex items-center justify-center">✕</button>
+          <button onClick={onClose} className="text-white/60 text-sm p-1">✕</button>
         </div>
-        <div className="p-4 flex flex-col gap-3">
+        <div className="p-2.5 flex flex-col gap-2">
           <button onClick={() => onPick('urea')}
-            className="w-full p-4 bg-red-50 border-2 border-red-200 rounded-2xl flex items-center gap-4 active:scale-95 transition-all hover:border-red-400">
-            <span className="text-3xl">💊</span>
-            <div className="flex-1 text-left">
-              <p className="font-black text-slate-800">Cheap Urea</p>
-              <p className="text-red-500 text-xs font-bold">Jaldi faida, mitti ko nuksaan</p>
+            className="w-full p-2.5 bg-red-50 border-2 border-red-100 rounded-xl flex items-center gap-2.5 active:scale-95 transition-all">
+            <span className="text-2xl">💊</span>
+            <div className="flex-1 text-left min-w-0">
+              <p className="font-black text-slate-800 text-[11px]">
+                {isHi ? 'सस्ती यूरिया' : 'Cheap Urea'}
+              </p>
+              <p className="text-red-600 text-[9px] font-bold leading-tight truncate">
+                {isHi ? 'मिट्टी को नुकसान होगा' : 'Harmful for soil'}
+              </p>
             </div>
-            <span className="font-black text-red-700 bg-red-100 px-3 py-1 rounded-full text-sm">₹800</span>
+            <span className="font-black text-red-700 bg-red-100 px-2 py-0.5 rounded-lg text-[10px]">₹800</span>
           </button>
           <button onClick={() => onPick('balanced')}
-            className="w-full p-4 bg-green-50 border-2 border-green-300 rounded-2xl flex items-center gap-4 active:scale-95 transition-all hover:border-green-500">
-            <span className="text-3xl">🌿</span>
-            <div className="flex-1 text-left">
-              <p className="font-black text-slate-800">Balanced Fertilizer</p>
-              <p className="text-green-600 text-xs font-bold">Long-term soil health</p>
+            className="w-full p-2.5 bg-green-50 border-2 border-green-200 rounded-xl flex items-center gap-2.5 active:scale-95 transition-all">
+            <span className="text-2xl">🌿</span>
+            <div className="flex-1 text-left min-w-0">
+              <p className="font-black text-slate-800 text-[11px]">
+                {isHi ? 'संतुलित खाद' : 'Balanced Fertilizer'}
+              </p>
+              <p className="text-green-600 text-[9px] font-bold leading-tight truncate">
+                {isHi ? 'मिट्टी रहे स्वस्थ' : 'Long-term health'}
+              </p>
             </div>
-            <span className="font-black text-green-700 bg-green-100 px-3 py-1 rounded-full text-sm">₹1,800</span>
+            <span className="font-black text-green-700 bg-green-100 px-2 py-0.5 rounded-lg text-[10px]">₹1,800</span>
           </button>
         </div>
       </div>
@@ -166,21 +184,24 @@ function FertilizerPicker({ onPick, onClose }) {
 }
 
 // ── TIME PASSING OVERLAY ──────────────────────────────────────────
-function TimePassingOverlay({ stage }) {
+function TimePassingOverlay({ stage, language }) {
+  const isHi = language === 'hi';
   const stages = {
-    week2:   { label: 'Week 2',   emoji: '🌱', step: 0 },
-    month1:  { label: 'Month 1',  emoji: '🌿', step: 1 },
-    harvest: { label: 'Harvest!', emoji: '🌾', step: 2 },
+    week2:   { label: isHi ? 'सप्ताह 2' : 'Week 2',   emoji: '🌱', step: 0 },
+    month1:  { label: isHi ? 'महिना 1' : 'Month 1',  emoji: '🌿', step: 1 },
+    harvest: { label: isHi ? 'कटाई!' : 'Harvest!', emoji: '🌾', step: 2 },
   };
   const s = stages[stage] || stages.week2;
   return (
     <div className="absolute inset-0 z-[5000] bg-amber-950/95 flex flex-col items-center justify-center gap-6 px-8">
-      <p className="text-amber-400 font-black uppercase tracking-[0.4em] text-xs">समय बीत रहा है / Time Passing</p>
-      <div className="text-9xl animate-bounce">{s.emoji}</div>
+      <p className="text-amber-400 font-black uppercase tracking-widest text-[10px]">
+        {isHi ? 'समय बीत रहा है' : 'Time Passing'}
+      </p>
+      <div className="text-8xl animate-bounce">{s.emoji}</div>
       <h1 className="text-5xl font-black text-white italic tracking-tighter">{s.label}</h1>
-      <div className="flex gap-3">
+      <div className="flex gap-2">
         {[0, 1, 2].map(i => (
-          <div key={i} className={`h-2 w-12 rounded-full transition-all duration-700 ${i <= s.step ? 'bg-amber-400' : 'bg-white/20'}`} />
+          <div key={i} className={`h-1.5 w-10 rounded-full transition-all duration-700 ${i <= s.step ? 'bg-amber-400 shadow-[0_0_10px_rgba(245,158,11,0.5)]' : 'bg-white/10'}`} />
         ))}
       </div>
     </div>
@@ -188,45 +209,52 @@ function TimePassingOverlay({ stage }) {
 }
 
 // ── OUTCOME CARD ─────────────────────────────────────────────────
-function OutcomeCard({ outcome, onDone, onWantExplanation }) {
+function OutcomeCard({ outcome, onDone, onWantExplanation, language }) {
+  const isHi = language === 'hi';
   const isGood = outcome.color === 'green';
   return (
-    <div className="absolute inset-x-4 top-14 z-[4000] animate-in zoom-in-95 fade-in duration-500">
-      <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-slate-100">
-        <div className={`px-5 py-5 ${isGood ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-red-600 to-orange-700'}`}>
-          <h2 className="text-white font-black text-xl">{outcome.title}</h2>
-          <p className="text-white/80 font-bold text-sm mt-1">{outcome.subtitle}</p>
+    <div className="absolute inset-x-2 top-10 z-[4000] animate-in zoom-in-95 fade-in duration-500">
+      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col max-h-[85vh]">
+        <div className={`px-4 py-3 shrink-0 ${isGood ? 'bg-gradient-to-r from-green-600 to-emerald-600' : 'bg-gradient-to-r from-red-600 to-orange-700'}`}>
+          <h2 className="text-white font-black text-base">{isHi ? outcome.titleHi : outcome.title}</h2>
+          <p className="text-white/80 font-bold text-[10px] leading-tight mt-0.5">{isHi ? outcome.subtitleHi : outcome.subtitle}</p>
         </div>
-        <div className="px-5 py-4 flex flex-col gap-2">
+        
+        <div className="overflow-y-auto p-3 space-y-2 flex-1">
           {outcome.totalLoss && (
             <div className="flex items-center gap-2 mb-1">
-              <div className="h-px flex-1 bg-red-100" />
-              <span className="text-red-500 font-black text-[10px] uppercase tracking-widest">Nuksaan: {outcome.totalLoss}</span>
+              <span className="text-red-500 font-black text-[9px] uppercase tracking-widest">
+                {isHi ? 'नुकसान: ' : 'Loss: '}{outcome.totalLoss}
+              </span>
               <div className="h-px flex-1 bg-red-100" />
             </div>
           )}
           {outcome.lines.map((l, i) => (
-            <div key={i} className={`flex items-center gap-3 p-3 rounded-2xl ${isGood ? 'bg-green-50' : 'bg-red-50'}`}>
-              <span className="text-2xl">{l.icon}</span>
-              <span className="flex-1 font-bold text-slate-700 text-sm">{l.label}</span>
-              <span className={`font-black text-sm ${isGood ? 'text-green-600' : 'text-red-600'}`}>{l.value}</span>
+            <div key={i} className={`flex items-center gap-2.5 p-2 rounded-xl border ${isGood ? 'bg-green-50/50 border-green-100' : 'bg-red-50/50 border-red-100'}`}>
+              <span className="text-lg">{l.icon}</span>
+              <span className="flex-1 font-bold text-slate-700 text-[11px]">{isHi ? l.labelHi : l.label}</span>
+              <span className={`font-black text-[11px] ${isGood ? 'text-green-700' : 'text-red-700'}`}>{l.value}</span>
             </div>
           ))}
+
+          <div className="p-2.5 bg-amber-50/50 border border-amber-100 rounded-xl flex items-start gap-2.5">
+            <span className="text-lg shrink-0">👴</span>
+            <p className="text-amber-800 font-bold italic text-[10px] leading-tight">
+              {isHi 
+                ? '"ज़मीन का ख्याल रखोगे, तो वह भी तुम्हारा ख्याल रखेगी। सही बीज ही सही निवेश है।"'
+                : '"Take care of the land, and it will take care of you. Right seeds are the right investment."'}
+            </p>
+          </div>
         </div>
-        <div className="mx-4 mb-4 p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-3">
-          <span className="text-2xl flex-shrink-0">👴</span>
-          <p className="text-amber-800 font-bold italic text-sm leading-relaxed">
-            "Zameen ka khayal rakhoge, to woh bhi tumhara khayal rakhegi."
-          </p>
-        </div>
-        <div className="px-4 pb-5 flex flex-col gap-2">
+
+        <div className="p-3 bg-white border-t border-slate-50 flex flex-col gap-1.5 shrink-0">
           <button onClick={onWantExplanation}
-            className="w-full py-3 bg-slate-100 text-slate-700 rounded-2xl font-black text-sm active:scale-95 transition-all">
-            Samajhna chahte ho? 💡
+            className="w-full py-2 bg-slate-100 text-slate-800 rounded-xl font-black text-[10px] active:scale-95 transition-all uppercase tracking-tight">
+            {isHi ? 'विस्तार से समझें 💡' : 'Need details? 💡'}
           </button>
           <button onClick={onDone}
-            className={`w-full py-4 text-white rounded-2xl font-black text-sm active:scale-95 transition-all ${isGood ? 'bg-green-600' : 'bg-amber-600'}`}>
-            Gyan Kendra Wapas Jao ➔
+            className={`w-full py-3 text-white rounded-xl font-black text-xs active:scale-95 transition-all shadow-md ${isGood ? 'bg-green-600 shadow-green-100' : 'bg-amber-600 shadow-amber-100'}`}>
+            {isHi ? 'आगे बढ़ें ➔' : 'Proceed ➔'}
           </button>
         </div>
       </div>
@@ -235,18 +263,25 @@ function OutcomeCard({ outcome, onDone, onWantExplanation }) {
 }
 
 // ── MINI EXPLANATION ──────────────────────────────────────────────
-function ExplainCard({ isGood, onClose }) {
+function ExplainCard({ isGood, onClose, language }) {
+  const isHi = language === 'hi';
   return (
-    <div className="absolute inset-x-4 bottom-28 z-[5500] animate-in slide-in-from-bottom-6 fade-in duration-300">
-      <div className="bg-slate-900 rounded-[2rem] p-5 border border-white/10 shadow-2xl">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-amber-400 font-black text-xs uppercase tracking-widest">Artha Chacha</span>
-          <button onClick={onClose} className="text-white/40 text-lg w-8 h-8 flex items-center justify-center">✕</button>
+    <div className="absolute inset-x-2 bottom-32 z-[5500] animate-in slide-in-from-bottom-6 fade-in duration-300">
+      <div className="bg-slate-900 rounded-2xl p-4 border border-white/10 shadow-2xl">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-amber-400 font-black text-[10px] uppercase tracking-widest">
+            {isHi ? 'अर्था चाचा' : 'Artha Chacha'}
+          </span>
+          <button onClick={onClose} className="text-white/40 text-sm p-1">✕</button>
         </div>
-        <p className="text-white font-bold text-sm leading-relaxed">
+        <p className="text-white font-bold text-[11px] leading-tight">
           {isGood
-            ? '🌱 Hybrid seeds cost more but grow stronger. Balanced fertilizer keeps soil alive every season. Sahi nivesh, baar baar milenga!'
-            : '⚠️ Cheap urea looks good in Year 1. But by Year 2, yield drops 40% due to soil damage. Sasta aaj, mehenga kal.'}
+            ? (isHi 
+                ? '🌱 हाइब्रिड बीज महंगे हैं पर इनसे मिट्टी और फसल दोनों बेहतर होते हैं। सही निवेश बार-बार लाभ देता है!'
+                : '🌱 Hybrid seeds cost more but grow stronger. Better yield, better soil. Right investment pays back!')
+            : (isHi
+                ? '⚠️ सस्ती यूरिया पहले साल तो ठीक लगती है, पर दूसरे साल पैदावार 40% गिरा देती है। सस्ता आज, महंगा कल।'
+                : '⚠️ Cheap urea ruins soil fertility. Year 1 looks okay, but Year 2 yield drops by 40%. Cheap today, costly tomorrow.')}
         </p>
       </div>
     </div>
@@ -254,7 +289,7 @@ function ExplainCard({ isGood, onClose }) {
 }
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────
-export default function SeedTrapScenario({ onComplete, onShowInsight, onHighlightsChange, onMapTintChange, onRegisterTapHandler }) {
+export default function SeedTrapScenario({ language = 'hi', onComplete, onShowInsight, onHighlightsChange, onMapTintChange, onRegisterTapHandler }) {
   const [stage, setStage] = useState('intro');
   const [timeStage, setTimeStage] = useState('week2');
   const [showPicker, setShowPicker] = useState(false);
@@ -332,22 +367,32 @@ export default function SeedTrapScenario({ onComplete, onShowInsight, onHighligh
       )}
 
       {/* Intro card */}
-      {stage === 'intro' && <FloatingEventCard onDismiss={() => setStage('seed')} />}
+      {stage === 'intro' && <FloatingEventCard language={language} onDismiss={() => setStage('seed')} />}
 
       {/* Hint strips (only when picker is closed) */}
       {stage === 'seed' && !showPicker && (
-        <BottomHint icon="🏪" text="Seed Shop ka pin tapein — Beej chuniye (Tap the glowing Seed Shop)" />
+        <BottomHint 
+          icon="🏪" 
+          text={language === 'hi' 
+            ? "बीज की दुकान पर टैप करें — बीज चुनें।" 
+            : "Tap the glowing Seed Shop to pick seeds."} 
+        />
       )}
       {stage === 'fertilizer' && !showPicker && (
-        <BottomHint icon="🧪" text="Fertilizer Shop tapein — Khaad chuniye (Tap the glowing Fertilizer shop)" />
+        <BottomHint 
+          icon="🧪" 
+          text={language === 'hi' 
+            ? "खाद की दुकान पर टैप करें — खाद चुनें।" 
+            : "Tap the glowing Fertilizer shop to pick fertilizers."} 
+        />
       )}
 
       {/* Pickers — only appear after user taps the pin */}
       {stage === 'seed' && showPicker && (
-        <SeedShopPicker onPick={handleSeedPick} onClose={() => setShowPicker(false)} />
+        <SeedShopPicker language={language} onPick={handleSeedPick} onClose={() => setShowPicker(false)} />
       )}
       {stage === 'fertilizer' && showPicker && (
-        <FertilizerPicker onPick={handleFertilizerPick} onClose={() => setShowPicker(false)} />
+        <FertilizerPicker language={language} onPick={handleFertilizerPick} onClose={() => setShowPicker(false)} />
       )}
 
       {/* Time passing */}
@@ -356,6 +401,7 @@ export default function SeedTrapScenario({ onComplete, onShowInsight, onHighligh
       {/* Outcome card */}
       {stage === 'outcome' && outcome && (
         <OutcomeCard
+          language={language}
           outcome={outcome}
           onDone={onComplete}
           onWantExplanation={() => onShowInsight?.(outcome)}

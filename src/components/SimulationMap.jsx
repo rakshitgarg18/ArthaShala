@@ -12,6 +12,7 @@ import learningModules from '../data/learningModules';
 import DecisionModal from './DecisionModal';
 import OutcomeOverlay from './OutcomeOverlay';
 import SeedTrapScenario from './SeedTrapScenario';
+import LoanTrapScenario from './LoanTrapScenario';
 console.log("SimulationMap: Initializing...");
 
 const MAP_SIZE = 800;
@@ -99,7 +100,7 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
 
   // Intercept location clicks: route to scenario if in module mode
   const handleLocationClick = (loc) => {
-    if (activeModuleId === 'seed_trap' && scenarioTapHandlerRef.current) {
+    if ((activeModuleId === 'seed_trap' || activeModuleId === 'loan_trap') && scenarioTapHandlerRef.current) {
       scenarioTapHandlerRef.current(loc.id);
       return; // Don't open the default location modal
     }
@@ -108,7 +109,8 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
 
   useEffect(() => {
     // CAMPAIGN MODE: Trigger Crisis immediately on mount
-    if (activeModuleId && activeModuleId !== 'seed_trap') {
+    // Skip for modules that have custom scenario components (seed_trap, loan_trap)
+    if (activeModuleId && !['seed_trap', 'loan_trap'].includes(activeModuleId)) {
       const module = learningModules.find(l => l.id === activeModuleId);
       if (module) {
         setPendingDecision({
@@ -146,11 +148,11 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
     // LOAN DECISION HUB
     if (action.type === 'loan' && !pendingDecision) {
       const loanOptions = isBank ? [
-        { label: language === 'hi' ? 'KCC लोन लें (४%)' : 'Take KCC Loan (4%)', sublabel: language === 'hi' ? 'सुरक्षित और सस्ता' : 'Safe and affordable', cost: action.amount, debtAdded: action.amount, waste: 0, isGood: true, type: 'loan' },
+        { label: language === 'hi' ? 'KCC लोन लें (4%)' : 'Take KCC Loan (4%)', sublabel: language === 'hi' ? 'सुरक्षित और सस्ता' : 'Safe and affordable', cost: action.amount, debtAdded: action.amount, waste: 0, isGood: true, type: 'loan' },
         { label: language === 'hi' ? 'अभी नहीं' : 'Not now', sublabel: '', cost: 0, debtAdded: 0, waste: 0, isGood: false, type: 'cancel' }
       ] : [
-        { label: language === 'hi' ? 'साहूकार से कर्ज लें (२४%)' : 'Take Sahukar Loan (24%)', sublabel: language === 'hi' ? 'जाल में फंस सकते हैं!' : 'Potential debt trap!', cost: action.amount, debtAdded: action.amount, waste: Math.round(action.amount * 0.2), isGood: false, type: 'loan' },
-        { label: language === 'hi' ? 'बैंक जाएं (४%)' : 'Go to Bank (4%)', sublabel: language === 'hi' ? 'बेहतर विकल्प' : 'Suggested choice', cost: 0, debtAdded: 0, waste: 0, isGood: true, type: 'nav_bank' }
+        { label: language === 'hi' ? 'साहूकार से कर्ज (24%)' : 'Sahukar Loan (24%)', sublabel: language === 'hi' ? 'कर्ज जाल का खतरा' : 'Potential debt trap!', cost: action.amount, debtAdded: action.amount, waste: Math.round(action.amount * 0.2), isGood: false, type: 'loan' },
+        { label: language === 'hi' ? 'बैंक जाएं (4%)' : 'Go to Bank (4%)', sublabel: language === 'hi' ? 'बेहतर विकल्प' : 'Suggested choice', cost: 0, debtAdded: 0, waste: 0, isGood: true, type: 'nav_bank' }
       ];
 
       setPendingDecision({
@@ -163,22 +165,6 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
       return;
     }
 
-    // SEED TRAP SCENARIO OVERRIDE
-    if (activeModuleId === 'seed_trap') {
-      if (locId === 'seed_shop' && simStep === 'seed') {
-         setSimChoices(prev => ({ ...prev, seed: action.type }));
-         setSimStep('fertilizer');
-         setActiveLocation(null);
-         return;
-      }
-      if (locId === 'fertilizer' && simStep === 'fertilizer') {
-         setSimChoices(prev => ({ ...prev, fertilizer: action.type }));
-         setSimStep('transition');
-         setActiveLocation(null);
-         startTimeline();
-         return;
-      }
-    }
 
     const finalAmount = action.amount;
     const finalType = action.type;
@@ -225,22 +211,6 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
     handleAction({ ...action, amount: cost }, locId);
   };
 
-  const startTimeline = () => {
-    setTimeTransition('week2');
-    setTimeout(() => setTimeTransition('month1'), 1500);
-    setTimeout(() => setTimeTransition('harvest'), 3000);
-    setTimeout(() => {
-      setTimeTransition(null);
-      // Determine Outcome
-      let outcome = 'mid';
-      const { seed, fertilizer } = simChoices;
-      if (seed === 'hybrid_seeds' && fertilizer === 'organic_manure') outcome = 'good'; // Adjusted for actual types
-      if (seed === 'hybrid_seeds' && fertilizer === 'fertilizer_bag') outcome = 'good'; 
-      if (fertilizer === 'buy_excess_urea') outcome = 'bad';
-      
-      onChoiceMade(outcome);
-    }, 4500);
-  };
 
   const handleVoiceCommand = (intent) => {
     if (intent.action === 'open_node' && intent.target) {
@@ -283,38 +253,38 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
              </div>
           </div>
 
-          {/* Core Metrics Grid */}
-          <div className="grid grid-cols-3 gap-2">
+          {/* Core Metrics Grid - Tighter */}
+          <div className="grid grid-cols-3 gap-1.5">
              {/* Wallet - Green Theme */}
-             <div className={`rounded-[24px] p-3 border-2 transition-all shadow-sm flex flex-col items-center group ${walletBalance < 2000 ? 'bg-red-50 border-red-200 shadow-red-100' : 'bg-green-50/50 border-green-100 shadow-green-100 hover:border-green-400'}`}>
-                <span className={`text-[9px] font-black uppercase tracking-widest mb-0.5 ${walletBalance < 2000 ? 'text-red-400' : 'text-green-600'}`}>
+             <div className={`rounded-2xl p-2 border transition-all shadow-sm flex flex-col items-center group ${walletBalance < 2000 ? 'bg-red-50 border-red-200 shadow-red-100' : 'bg-green-50/50 border-green-100 shadow-green-100 hover:border-green-400'}`}>
+                <span className={`text-[8px] font-black uppercase tracking-widest mb-0.5 ${walletBalance < 2000 ? 'text-red-400' : 'text-green-600'}`}>
                   {language === 'en' ? 'WALLET' : 'बटुआ'}
                 </span>
-                <div className={`font-black text-lg tabular-nums ${walletBalance < 2000 ? 'text-red-600' : 'text-green-700'}`}>
+                <div className={`font-black text-sm tabular-nums ${walletBalance < 2000 ? 'text-red-600' : 'text-green-700'}`}>
                   ₹{walletBalance.toLocaleString()}
                 </div>
              </div>
              
               {/* Artha Score - Indigo Theme */}
               <div 
-                className="bg-indigo-50/50 rounded-[24px] p-3 border-2 border-indigo-100 shadow-sm shadow-indigo-100 flex flex-col items-center group hover:border-indigo-400 transition-all cursor-pointer active:scale-95"
+                className="bg-indigo-50/50 rounded-2xl p-2 border border-indigo-100 shadow-sm shadow-indigo-100 flex flex-col items-center group hover:border-indigo-400 transition-all cursor-pointer active:scale-95"
                 onClick={() => setShowScoreDetails(true)}
               >
-                 <span className="text-[9px] font-black text-indigo-500 uppercase tracking-widest mb-0.5">
-                   {language === 'en' ? 'ARTHA SCORE' : 'स्कोर'}
+                 <span className="text-[8px] font-black text-indigo-500 uppercase tracking-widest mb-0.5">
+                   {language === 'en' ? 'SCORE' : 'स्कोर'}
                  </span>
-                 <div className="text-indigo-700 font-black text-lg tabular-nums">{arthaScore}</div>
+                 <div className="text-indigo-700 font-black text-sm tabular-nums">{arthaScore}</div>
               </div>
 
              {/* Total Debt - Amber/Red Theme */}
              <div 
-               className={`rounded-[24px] p-3 border-2 transition-all shadow-sm flex flex-col items-center cursor-pointer active:scale-95 group ${(bankDebt + sahukarDebt) > 0 ? 'bg-amber-50/50 border-amber-200 shadow-amber-100 hover:border-red-400' : 'bg-slate-50 border-slate-200 shadow-slate-100'}`}
+               className={`rounded-2xl p-2 border transition-all shadow-sm flex flex-col items-center cursor-pointer active:scale-95 group ${(bankDebt + sahukarDebt) > 0 ? 'bg-amber-50/50 border-amber-200 shadow-amber-100 hover:border-red-400' : 'bg-slate-50 border-slate-200 shadow-slate-100'}`}
                onClick={onOpenLedger}
              >
-                <span className={`text-[9px] font-black uppercase tracking-widest mb-0.5 ${(bankDebt + sahukarDebt) > 0 ? 'text-amber-600' : 'text-slate-400'}`}>
-                  {language === 'en' ? 'TOTAL DEBT' : 'कुल कर्ज'}
+                <span className={`text-[8px] font-black uppercase tracking-widest mb-0.5 ${(bankDebt + sahukarDebt) > 0 ? 'text-amber-600' : 'text-slate-400'}`}>
+                  {language === 'en' ? 'DEBT' : 'कर्ज'}
                 </span>
-                <div className={`font-black text-lg tabular-nums ${(bankDebt + sahukarDebt) > walletBalance ? 'text-red-600' : ((bankDebt + sahukarDebt) > 0 ? 'text-amber-700' : 'text-slate-900')}`}>
+                <div className={`font-black text-sm tabular-nums ${(bankDebt + sahukarDebt) > walletBalance ? 'text-red-600' : ((bankDebt + sahukarDebt) > 0 ? 'text-amber-700' : 'text-slate-900')}`}>
                   ₹{(bankDebt + sahukarDebt).toLocaleString()}
                 </div>
              </div>
@@ -326,46 +296,56 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
 
       {/* ── VIBRANT MAP AREA ── */}
       <div ref={mapScrollRef} className={`flex-1 overflow-auto bg-[#F4EBD9] relative cursor-grab active:cursor-grabbing scroll-smooth ${activeTourStep === 4 ? 'z-[600]' : 'z-10'}`}>
-         {activeTourStep === 4 && (
+          {activeTourStep === 4 && (
             <div className="fixed inset-0 bg-slate-900/65 backdrop-blur-md z-[10] pointer-events-none transition-all duration-500" />
-         )}
-         <div style={{ position: 'relative', width: MAP_SIZE, height: MAP_SIZE, backgroundColor: '#F4EBD9' }} className="shadow-inner">
-           <img 
-             src="/assets/village_map.png" 
-             alt="Village Map" 
-             style={{ width: MAP_SIZE, height: MAP_SIZE }} 
-             draggable={false} 
-             className="brightness-[1.03] contrast-[1.05] block" 
-           />
-           {activeTourStep === 4 && (
+          )}
+          <div style={{ position: 'relative', width: MAP_SIZE, height: MAP_SIZE, backgroundColor: '#F4EBD9' }} className="shadow-inner">
+            <img 
+              src="/assets/village_map.png" 
+              alt="Village Map" 
+              style={{ width: MAP_SIZE, height: MAP_SIZE }} 
+              draggable={false} 
+              className="brightness-[1.03] contrast-[1.05] block" 
+            />
+            {activeTourStep === 4 && (
               <div className="absolute inset-0 bg-slate-900/65 z-[50] pointer-events-none transition-all duration-500" />
-           )}
-           
-           <MapMarkers 
-             activeLocation={activeLocation} 
-             onLocationClick={handleLocationClick}
-             language={language}
-             activeTourStep={activeTourStep}
-             highlights={activeModuleId === 'seed_trap' ? scenarioHighlights : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])}
-           />
+            )}
+            
+            <MapMarkers 
+              activeLocation={activeLocation} 
+              onLocationClick={handleLocationClick}
+              language={language}
+              activeTourStep={activeTourStep}
+              highlights={['seed_trap', 'loan_trap'].includes(activeModuleId) ? scenarioHighlights : (pendingDecision?.isCrisis ? ['bank', 'moneylender'] : [])}
+            />
 
-           {/* Map tint overlay for scenario outcomes */}
-           {mapTint && (
-             <div className="absolute inset-0 z-[20] pointer-events-none transition-all duration-1000" style={{ background: mapTint }} />
-           )}
-         </div>
+            {/* Map tint overlay for scenario outcomes */}
+            {mapTint && (
+              <div className="absolute inset-0 z-[20] pointer-events-none transition-all duration-1000" style={{ background: mapTint }} />
+            )}
 
-         {/* Seed Trap Scenario — renders floating cards INSIDE the map area */}
-         {activeModuleId === 'seed_trap' && (
-           <SeedTrapScenario
-             onComplete={() => onModuleComplete?.()}
-             onShowInsight={onShowInsight}
-             onHighlightsChange={setScenarioHighlights}
-             onMapTintChange={setMapTint}
-             onRegisterTapHandler={(fn) => { scenarioTapHandlerRef.current = fn; }}
-           />
-         )}
-       </div>
+            {/* Scenario Overlays (Inside 800x800 container for correct coordinate stacking) */}
+            {activeModuleId === 'seed_trap' && (
+              <SeedTrapScenario
+                onComplete={() => onModuleComplete?.()}
+                onShowInsight={onShowInsight}
+                onHighlightsChange={setScenarioHighlights}
+                onMapTintChange={setMapTint}
+                onRegisterTapHandler={(fn) => { scenarioTapHandlerRef.current = fn; }}
+              />
+            )}
+
+            {activeModuleId === 'loan_trap' && (
+               <LoanTrapScenario
+                 onComplete={() => onModuleComplete?.()}
+                 onShowInsight={onShowInsight}
+                 onHighlightsChange={setScenarioHighlights}
+                 onMapTintChange={setMapTint}
+                 onRegisterTapHandler={(fn) => { scenarioTapHandlerRef.current = fn; }}
+               />
+            )}
+          </div>
+        </div>
 
       {/* ── BOLO ENGINE FIXED AT BOTTOM ── */}
       <div className={`absolute bottom-8 left-1/2 -translate-x-1/2 transition-all duration-500 ${activeTourStep === 3 ? 'z-[600]' : 'z-[1000]'}`}>
@@ -385,56 +365,53 @@ export default function SimulationMap({ onOpenLedger, profile, activeModuleId, o
         onStepChange={setActiveTourStep}
       />
 
-      {/* Location Modal (Phase 24 Aesthetic) */}
+      {/* Location Modal - Compacted for 320px */}
       {activeLocation && (
-        <div className="absolute inset-0 z-[2000] flex items-center justify-center p-4" onClick={() => setActiveLocation(null)}>
+        <div className="absolute inset-0 z-[2030] flex items-center justify-center p-4" onClick={() => setActiveLocation(null)}>
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300" />
-          <div className="relative w-full max-w-sm bg-white rounded-[40px] shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-bottom-8 duration-500" onClick={e => e.stopPropagation()}>
-            <div className="bg-indigo-600 p-8 text-white flex flex-col items-center relative">
+          <div className="relative w-[92vw] max-w-[320px] bg-white rounded-[2.5rem] shadow-2xl overflow-hidden animate-in zoom-in slide-in-from-bottom-8 duration-500" onClick={e => e.stopPropagation()}>
+            <div className="bg-indigo-600 p-4 pt-8 text-white flex flex-col items-center relative">
               <button 
                 onClick={() => setActiveLocation(null)}
-                className="absolute right-6 top-6 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors text-white"
+                className="absolute right-4 top-4 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors text-white text-xs"
               >
                 ✕
               </button>
-              <div className="w-20 h-20 bg-white/10 rounded-3xl flex items-center justify-center text-5xl mb-4 border border-white/10 shadow-inner">
+              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center text-2xl mb-2 border border-white/10 shadow-inner">
                 {activeLocation.icon}
               </div>
-              <h3 className="text-2xl font-black text-center tracking-tight">
+              <h3 className="text-base font-black text-center tracking-tight leading-none uppercase">
                 {language === 'hi' ? activeLocation.nameHi : activeLocation.name}
               </h3>
             </div>
             
-            <div className="p-6 bg-slate-50 space-y-3 max-h-[50vh] overflow-y-auto">
+            <div className="p-3 bg-slate-50 space-y-2 max-h-[45vh] overflow-y-auto custom-scrollbar">
               {(ACTIONS[activeLocation.id] || []).map((action, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleAction(action, activeLocation.id)}
-                  className="w-full flex items-center p-4 bg-white border-2 border-slate-100 hover:border-blue-200 hover:shadow-md rounded-3xl active:scale-[0.98] transition-all group"
+                  className="w-full flex items-center p-3.5 bg-white border border-slate-200 hover:border-indigo-200 rounded-2xl active:scale-[0.98] transition-all group"
                 >
-                  <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl mr-4 group-hover:bg-blue-50 transition-colors">
+                  <div className="w-9 h-9 bg-slate-50 rounded-xl flex items-center justify-center text-xl mr-3 group-hover:bg-indigo-50 transition-colors">
                     {action.asset ? (
-                      <img src={action.asset} className="w-8 h-8 object-contain drop-shadow-sm" alt="" />
+                      <img src={action.asset} className="w-6 h-6 object-contain" alt="" />
                     ) : (action.icon)}
                   </div>
-                  <div className="flex-1 text-left">
-                    <h4 className="font-black text-slate-800 text-[16px] leading-tight group-hover:text-indigo-600 transition-colors">
-                      {t[action.name] || action.name.replace(/_/g, ' ').toUpperCase()}
+                  <div className="flex-1 text-left min-w-0">
+                    <h4 className="font-black text-slate-800 text-[13px] leading-tight group-hover:text-indigo-600 transition-colors uppercase truncate">
+                      {t[action.name] || action.name.replace(/_/g, ' ')}
                     </h4>
                     {action.badge && (
-                      <span className="inline-block mt-1 px-2 py-0.5 bg-red-100 text-red-600 text-[9px] font-black uppercase tracking-widest rounded">
+                      <span className="inline-block mt-0.5 px-1.5 py-0.5 bg-red-100 text-red-600 text-[8px] font-black uppercase tracking-widest rounded">
                         {action.badge}
                       </span>
                     )}
                   </div>
                   {action.amount !== 0 && (
-                    <div className="text-right ml-2 flex flex-col items-end">
-                      <span className={`text-base font-black ${action.amount > 0 ? 'text-green-500' : 'text-slate-600'}`}>
+                    <div className="text-right ml-2 flex flex-col items-end shrink-0">
+                      <span className={`text-[13px] font-black ${action.amount > 0 ? 'text-green-500' : 'text-slate-600'}`}>
                         {action.amount > 0 ? '+' : ''}₹{Math.abs(action.amount)}
                       </span>
-                      {action.amountLabel && (
-                        <span className="text-[9px] font-bold text-slate-400 mt-0.5">{action.amountLabel}</span>
-                      )}
                     </div>
                   )}
                 </button>

@@ -130,118 +130,64 @@ export default function BoloEngine({ onCommand, activeModal }) {
     const SCORE_KEYS = ['score', 'स्कोर', 'artha', 'credit', 'performance'];
     const GAME_GOAL = ['win', 'जीत', 'aim', 'goal', 'finish', 'end', 'khel', 'objective'];
     const TIME_KEYS = ['month', 'mahina', 'समय', 'time', 'kab'];
-    const PROF_KEYS = ['profile', 'name', 'land', 'zamin', 'kheti', 'income'];
-    const TOUR_KEYS = ['help', 'tour', 'sikhao', 'baat', 'chacha', 'guide'];
 
     setTimeout(() => {
-      let mockIntent = {
-        type: "question",
-        action: "none",
-        target: null,
-        spoken_response: language === 'hi' 
-          ? "माफ़ कीजिए, मुझे इसके बारे में जानकारी नहीं है। कृपया खेती या बैंक के बारे में पूछें।" 
-          : "I'm sorry, beta, I don't know about that. Please ask about farming or banking."
+      // ── AI Dynamic Response Generation ──
+      const getAIResponse = () => {
+        const input = text.toLowerCase();
+        
+        // 1. NAVIGATION
+        if (NAV_PANCHAYAT.some(k => input.includes(k))) {
+          return { target: "panchayat", action: "open_node", type: "command", spoken: language === 'hi' ? "पंचायत में योजनाएं आपका इंतज़ार कर रही हैं। चलिए।" : "Government schemes await you at the Panchayat. Let's head there." };
+        }
+        if (NAV_BANK.some(k => input.includes(k))) {
+          return { target: "bank", action: "open_node", type: "command", spoken: language === 'hi' ? "बैंक जाना ही सबसे सुरक्षित रास्ता है। चलिए।" : "The bank is the safest path, beta. Let's go." };
+        }
+        if (NAV_MANDI.some(k => input.includes(k))) {
+          return { target: "market", action: "open_node", type: "command", spoken: language === 'hi' ? "मंडी में आज की दरें देख लेते हैं।" : "Let's check today's market rates at the mandi." };
+        }
+
+        // 2. CONTEXTUAL STATS
+        if (BAL_KEYS.some(k => input.includes(k))) {
+          return { spoken: language === 'hi' ? `बेटा, आप पास ₹${walletBalance} हैं। संभलकर चलें।` : `You have ₹${walletBalance} with you, beta. Spend wisely.` };
+        }
+        if (SCORE_KEYS.some(k => input.includes(k))) {
+          const comment = arthaScore > 70 ? (language === 'hi' ? "बहुत शानदार!" : "Excellent!") : (language === 'hi' ? "मेहनत की ज़रूरत है।" : "Needs some work.");
+          return { spoken: language === 'hi' ? `आपका अर्था स्कोर ${arthaScore} है। ${comment}` : `Your Artha Score is ${arthaScore}. ${comment}` };
+        }
+        if (LOAN_KEYS.some(k => input.includes(k))) {
+          const totalDebt = sahukarDebt + bankDebt;
+          if (totalDebt > 0) return { spoken: language === 'hi' ? `आप पर ₹${totalDebt} का कर्ज है। इसे चुकाने की योजना बनाएं।` : `You owe ₹${totalDebt} in loans. Plan to repay it soon, beta.` };
+          return { spoken: language === 'hi' ? "अभी आप पर कोई कर्ज नहीं है। यह बहुत अच्छा है!" : "You have no debt right now. That's excellent!" };
+        }
+
+        // 3. SEED SHOP LOGIC
+        if (SEED_KEYS.some(k => input.includes(k))) {
+           if (activeModal === 'seed_shop') {
+             return { spoken: language === 'hi' ? "हाइब्रिड बीज से फसल अच्छी होगी, पर खर्च भी ज़्यादा होगा।" : "Hybrid seeds give more yield but cost more too." };
+           }
+           return { target: "seed_shop", action: "open_node", type: "command", spoken: language === 'hi' ? "बीज और खाद के लिए दुकान चलते हैं।" : "Let's go to the shop for seeds and fertilizer." };
+        }
+
+        // 4. FALLBACK
+        const fallbacks = language === 'hi' 
+          ? ["साहूकार से बचें, बैंक से जुड़ें।", "बचत करना ही अमीरी की पहली सीढ़ी है।", "मुझसे कुछ भी पूछें, मैं आपकी मदद करूँगा।"]
+          : ["Avoid the moneylender, stay with the bank.", "Saving is the first step to prosperity.", "Ask me anything, beta, I am here to help."];
+        return { spoken: fallbacks[Math.floor(Math.random() * fallbacks.length)] };
       };
 
-      // ── NAVIGATION OVERRIDES (Highest Priority) ──
-      if (NAV_PANCHAYAT.some(k => text.includes(k))) {
-        mockIntent = { type: "command", action: "open_node", target: "panchayat", spoken_response: language === 'hi' ? "ज़रूर, पंचायत ऑफिस में कई योजनाएं हैं। चलिए देखते हैं।" : "Of course, there are many schemes at the Panchayat office. Let's look." };
-      } else if (NAV_BANK.some(k => text.includes(k))) {
-        mockIntent = { type: "command", action: "open_node", target: "bank", spoken_response: language === 'hi' ? "बैंक जाना एक समझदारी भरा फैसला है। चलिए।" : "Going to the bank is a wise decision. Let's head there." };
-      } else if (NAV_HOME.some(k => text.includes(k))) {
-        mockIntent = { type: "command", action: "open_node", target: "home", spoken_response: language === 'hi' ? "घर चलिए, थोड़ा आराम कीजिए।" : "Let's go home and rest, beta." };
-      } else if (NAV_MANDI.some(k => text.includes(k))) {
-        mockIntent = { type: "command", action: "open_node", target: "market", spoken_response: language === 'hi' ? "मंडी में आज की दरें देखेंगे?" : "Let's check today's rates at the mandi." };
-      }
-
-      // ── STATE QUERIES (NEW) ──
-      if (BAL_KEYS.some(k => text.includes(k)) && !text.includes('loan')) {
-        mockIntent.spoken_response = language === 'hi'
-          ? `बेटा, आपकी जेब में ₹${walletBalance} बचे हैं। सोच-समझकर खर्च करें।`
-          : `Beta, you have ₹${walletBalance} in your wallet. Spend it wisely.`;
-      } else if (SCORE_KEYS.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-          ? `आपका अर्था स्कोर ${arthaScore} है। इसे बेहतर करने के लिए समय पर लोन चुकाएं।`
-          : `Your Artha Score is ${arthaScore}. Repay loans on time to improve it, beta.`;
-      } else if (TIME_KEYS.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-          ? `यह ${currentMonth} का महीना है। खेती का अच्छा समय है।`
-          : `This is the month of ${currentMonth}, beta. A crucial time for your farm.`;
-      } else if (GAME_GOAL.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-          ? "हमारा लक्ष्य आपके गाँव को समृद्ध करना और आपको साहूकार के कर्ज से बचाना है।"
-          : "Our goal is to make your village prosperous and keep you away from the moneylender's trap, beta.";
-      } else if (PROF_KEYS.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-             ? `आप एक मेहनती किसान हैं। अपनी मेहनत पर भरोसा रखें।`
-             : `You are a hardworking farmer. Trust in your strategy, beta.`;
-      } else if (TOUR_KEYS.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-             ? "मैं आपको गाँव की सैर करा सकता हूँ। क्या आप तैयार हैं?"
-             : "I can show you around the village. Are you ready, beta?";
-      }
-
-      // ── WISDOM LOGIC: SEEDS & SPENDING (Now triggers Seed Shop) ──
-      else if (SEED_KEYS.some(k => text.includes(k))) {
-        // Special case: Already in the shop!
-        if (activeModal === 'seed_shop') {
-          mockIntent.spoken_response = language === 'hi'
-            ? "हाइब्रिड बीज से फसल अच्छी होगी, बेटा, पर उसमें मेहनत और खाद ज़्यादा लगेगी। अगर पैसे कम हैं तो देसी बीज ही लें।"
-            : "Hybrid seeds will give a better yield, beta, but they need more care and fertilizers. If budget is tight, stick to basic seeds.";
-        } else {
-          mockIntent.target = "seed_shop";
-          mockIntent.action = "open_node";
-          mockIntent.type = "command";
-
-          if (walletBalance < 2000) {
-            mockIntent.spoken_response = language === 'hi'
-              ? `बेटा, जेब में सिर्फ ₹${walletBalance} हैं। खाद-बीज लेना अभी भारी पड़ेगा। पहले बैंक से मदद माँगें।`
-              : `Beta, you only have ₹${walletBalance}. Buying seeds now will be hard. Let's head to the shop anyway, but consider a loan first.`;
-          } else {
-            mockIntent.spoken_response = language === 'hi'
-              ? `बुवाई का समय है! ₹${walletBalance} में बढ़िया बीज आएँगे। चलिए दुकान चलते हैं।`
-              : `It's sowing season! ₹${walletBalance} is enough for good seeds. Let's go to the seed shop.`;
-          }
-        }
-      }
-
-      // ── WISDOM LOGIC: LOANS & DEBT ──
-      else if (LOAN_KEYS.some(k => text.includes(k))) {
-        if (eligibleSchemes.length > 0) {
-           mockIntent.spoken_response = language === 'hi'
-              ? "साहूकार से मत उलझो! पंचायत में आपके लिए सरकारी सहायता है। चलिए वहाँ चलते हैं।"
-              : "Don't get stuck with the moneylender! There's government help at the Panchayat. Let's head there.";
-           mockIntent.target = "panchayat";
-           mockIntent.action = "open_node";
-           mockIntent.type = "command";
-        } else if (arthaScore > 600) {
-           mockIntent.spoken_response = language === 'hi'
-              ? "आपका अर्था स्कोर बढ़िया है! बैंक से कम ब्याज पर लोन मिलेगा। चलिए बैंक चलते हैं।"
-              : "Your Artha Score is great! You'll get a low-interest bank loan. Let's go to the bank.";
-           mockIntent.target = "bank";
-           mockIntent.action = "open_node";
-           mockIntent.type = "command";
-        }
-      }
-
-      // ── WISDOM LOGIC: WATER ──
-      else if (IRRIGATION_KEYS.some(k => text.includes(k))) {
-        mockIntent.spoken_response = language === 'hi'
-          ? "फसल को पानी की ज़रूरत है, पर उतना ही दें जितनी मिट्टी की माँग हो।"
-          : "The crop needs water, but give only what the soil asks for, beta.";
-      }
-
-      // ── WISDOM LOGIC: GENERAL ENCOURAGEMENT ──
-      else if (text.includes('kaisa') || text.includes('theek') || text.includes('how') || text.includes('good')) {
-        mockIntent.spoken_response = language === 'hi'
-          ? "सब ठीक हो जाएगा! बस अपनी मेहनत और अकल पर भरोसा रखें। मैं साथ हूँ।"
-          : "Everything will be fine! Just trust your hard work and wisdom. I am right here with you, beta.";
-      }
+      const result = getAIResponse();
+      const mockIntent = {
+        type: result.type || "question",
+        action: result.action || "none",
+        target: result.target || null,
+        spoken_response: result.spoken
+      };
 
       setIsThinking(false);
       setChachaResponse(mockIntent.spoken_response);
       speak(mockIntent.spoken_response, mockIntent);
-    }, 1200);
+    }, 1000);
   };
 
   // 3. MOUTH: Native Speech Synthesis (Tuned for Rural Persona)
@@ -287,23 +233,23 @@ export default function BoloEngine({ onCommand, activeModal }) {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-[2000] pointer-events-none flex flex-col items-center pb-12">
-      {/* Visual Feedback Overlay */}
+      {/* Visual Feedback Overlay - Refined for 320px width */}
       {(status !== 'idle') && (
-        <div className="mb-8 w-full max-w-sm px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-slate-900/95 backdrop-blur-2xl border border-white/20 p-8 rounded-[40px] shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] flex flex-col items-center gap-6 pointer-events-auto">
+        <div className="mb-4 w-[92vw] max-w-[320px] px-2 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-slate-900/98 backdrop-blur-2xl border border-white/20 p-5 rounded-[2.5rem] shadow-2xl flex flex-col items-center gap-4 pointer-events-auto">
             
             {status === 'listening' && (
               <div className="flex flex-col items-center gap-4">
-                <div className="flex gap-1.5 items-end justify-center h-12">
+                <div className="flex gap-1 items-end justify-center h-8">
                   {[1, 2, 3, 4, 5, 6].map(i => (
-                    <div key={`vbar-${i}`} className="w-2 bg-green-400 rounded-full animate-voice-bar" style={{ height: '30%', animationDelay: `${i * 120}ms` }} />
+                    <div key={`vbar-${i}`} className="w-1.5 bg-green-400 rounded-full animate-voice-bar" style={{ height: '30%', animationDelay: `${i * 120}ms` }} />
                   ))}
                 </div>
                 <div className="text-center">
                    <p className="text-green-400 font-black uppercase text-[11px] tracking-[0.2em] mb-2">
                      {language === 'hi' ? "सुन रहा हूँ..." : "LISTENING..."}
                    </p>
-                   <p className="text-white font-medium text-lg italic opacity-90 leading-snug">
+                   <p className="text-white font-black text-sm italic opacity-95 leading-tight px-2">
                      {transcript || "..."}
                    </p>
                 </div>
@@ -312,7 +258,7 @@ export default function BoloEngine({ onCommand, activeModal }) {
 
             {status === 'thinking' && (
               <div className="flex flex-col items-center gap-4 py-4">
-                <div className="relative w-16 h-16">
+                <div className="relative w-12 h-12">
                   <div className="absolute inset-0 border-4 border-blue-400/20 rounded-full" />
                   <div className="absolute inset-0 border-4 border-blue-400 border-t-transparent rounded-full animate-spin" />
                 </div>
@@ -324,10 +270,10 @@ export default function BoloEngine({ onCommand, activeModal }) {
 
             {status === 'speaking' && (
               <div className="flex flex-col items-center gap-4 text-center">
-                <div className="w-20 h-20 rounded-full bg-slate-800 border-2 border-white/10 flex items-center justify-center text-4xl shadow-inner animate-soft-bounce">
+                <div className="w-14 h-14 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-3xl shadow-inner animate-soft-bounce">
                   👴
                 </div>
-                <p className="text-white font-bold text-xl leading-relaxed tracking-tight">
+                <p className="text-white font-bold text-sm leading-snug tracking-tight px-2">
                   {chachaResponse}
                 </p>
               </div>
@@ -341,10 +287,10 @@ export default function BoloEngine({ onCommand, activeModal }) {
         <button 
           onClick={toggleListening}
           disabled={(status !== 'idle' && status !== 'listening') || (activeModal === 'tour')}
-          className={`w-24 h-24 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.4)] border-[8px] active:scale-90 ${status === 'listening' ? 'bg-red-500 border-red-200 ring-[12px] ring-red-500/20' : 'bg-[#22C55E] border-white hover:shadow-green-500/20'} ${(activeModal === 'tour' && (status === 'idle' || status === 'listening')) ? 'opacity-30 grayscale' : 'opacity-100'}`}
+          className={`w-20 h-20 rounded-full flex flex-col items-center justify-center transition-all duration-300 shadow-xl border-[6px] active:scale-90 ${status === 'listening' ? 'bg-red-500 border-red-200 ring-[8px] ring-red-500/20' : 'bg-green-500 border-white hover:bg-green-600'} ${(activeModal === 'tour' && (status === 'idle' || status === 'listening')) ? 'opacity-30 grayscale' : 'opacity-100'}`}
         >
-          <span className="text-4xl mb-1">{status === 'listening' ? '⏹️' : '🎤'}</span>
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">
+          <span className="text-3xl mb-0.5">{status === 'listening' ? '⏹️' : '🎤'}</span>
+          <span className="text-[9px] font-black text-white uppercase tracking-widest">
             {status === 'listening' ? (language === 'hi' ? 'बंद' : 'STOP') : 'BOLO'}
           </span>
         </button>
